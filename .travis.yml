@@ -3,10 +3,6 @@ node_js:
   - 0.6
   - 0.8
 
-env:
-  global:
-    - secure: "wdUEZAEK6wvTbAyQOT/nurD2fckFomdv/3XY3YLMhM2ZCjMT/hoi8WsHuZDu\n3J2CUlcIuFlwNJJwEEs1Zb6mpOT5aJmJaXIMsy+YLbvHiQfli8MIxygWVMoI\noNLysTAZqtkFv8NxeXdof46wknZVm2R6Ir+fmw2NI1+1iUsDxtg="
-
 script: npm test
 
 notifications:
