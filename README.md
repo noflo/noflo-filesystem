@@ -4,3 +4,4 @@ File system components for NoFlo [![Build Status](https://secure.travis-ci.org/b
 This module provides components for the [NoFlo](http://noflojs.org/) flow-based programming framework to deal with the file system.
 
 * CopyTree: Copy an entire file tree
+* ReadFile: Read the contents of a file
