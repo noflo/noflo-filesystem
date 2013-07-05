@@ -28,7 +28,9 @@
       "ReadDir": "./components/ReadDir.coffee",
       "ReadFile": "./components/ReadFile.coffee",
       "ReadFileRaw": "./components/ReadFileRaw.coffee",
-      "Stat": "./components/Stat.coffee"
+      "Stat": "./components/Stat.coffee",
+      "WriteFile": "./components/WriteFile.coffee",
+      "WriteFileRaw": "./components/WriteFileRaw.coffee"
     }
   },
   "scripts": {
