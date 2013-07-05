@@ -23,7 +23,8 @@
     "components": {
       "CopyTree": "./components/CopyTree.coffee",
       "ReadDir": "./components/ReadDir.coffee",
-      "ReadFile": "./components/ReadFile.coffee"
+      "ReadFile": "./components/ReadFile.coffee",
+      "ReadFileRaw": "./components/ReadFileRaw.coffee"
     }
   },
   "scripts": {
