@@ -21,6 +21,7 @@
   },
   "noflo": {
     "components": {
+      "CopyFile": "./components/CopyFile.coffee",
       "CopyTree": "./components/CopyTree.coffee",
       "ReadDir": "./components/ReadDir.coffee",
       "ReadFile": "./components/ReadFile.coffee",
