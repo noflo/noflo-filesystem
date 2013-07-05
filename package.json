@@ -24,6 +24,7 @@
       "CopyFile": "./components/CopyFile.coffee",
       "CopyTree": "./components/CopyTree.coffee",
       "DirName": "./components/DirName.coffee",
+      "MakeDir": "./components/MakeDir.coffee",
       "ReadDir": "./components/ReadDir.coffee",
       "ReadFile": "./components/ReadFile.coffee",
       "ReadFileRaw": "./components/ReadFileRaw.coffee"
