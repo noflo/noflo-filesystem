@@ -10,3 +10,4 @@ This module provides components for the [NoFlo](http://noflojs.org/) flow-based 
 * ReadDir: Read the contents of a directory
 * ReadFile: Read the textual contents of a file
 * ReadFileRaw: Read the raw contents of a file
+* Stat: Get metadata about a file path
