@@ -1,14 +1,14 @@
 fs = require 'fs'
 path = require 'path'
-noflo = require "noflo"
+noflo = require 'noflo'
 
 class MakeDir extends noflo.AsyncComponent
   constructor: ->
     @inPorts =
-      in: new noflo.Port()
+      in: new noflo.Port 'string'
     @outPorts =
-      out: new noflo.Port()
-      error: new noflo.Port()
+      out: new noflo.Port 'string'
+      error: new noflo.Port 'object'
 
     super()
 
@@ -24,19 +24,22 @@ class MakeDir extends noflo.AsyncComponent
   mkDir: (dirPath, callback) ->
     orig = dirPath
     dirPath = path.resolve dirPath
+
+    # Try creating it
     fs.mkdir dirPath, (err) =>
       # Directory was created
-      return callback null unless err
+      unless err
+        return callback null
 
       switch err.code
+        # Parent missing, create
         when 'ENOENT'
-          # Parent missing, create
           @mkDir path.dirname(dirPath), (err) =>
             return callback err if err
             @mkDir dirPath, callback
 
+        # Check if the directory actually exists already
         else
-          # Check if the directory actually exists already
           fs.stat dirPath, (statErr, stat) =>
             return callback err if statErr
             return callback err unless stat.isDirectory()
