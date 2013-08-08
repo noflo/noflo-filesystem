@@ -3,20 +3,23 @@
   "description": "Filesystem components for the NoFlo flow-based programming environment",
   "author": "Henri Bergius <henri.bergius@iki.fi>",
   "version": "1.0.2",
-  "licenses": [{
-    "type": "MIT",
-    "url": "https://github.com/noflo/noflo/raw/master/LICENSE"
-  }],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/noflo/noflo/raw/master/LICENSE"
+    }
+  ],
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/noflo/noflo-filesystem.git"
+    "type": "git",
+    "url": "https://github.com/noflo/noflo-filesystem.git"
   },
   "engines": {
     "node": ">=0.6.0"
   },
   "dependencies": {
     "noflo": "0.3.x",
-    "fs.extra": "1.2.x"
+    "fs.extra": "1.2.x",
+    "mimetype": "0.0.5"
   },
   "devDependencies": {
     "nodeunit": ">=0.6.0",
