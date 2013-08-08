@@ -31,6 +31,8 @@
       "DirectoryBuffer": "./components/DirectoryBuffer.coffee",
       "DirectoryGroupBuffer": "./components/DirectoryGroupBuffer.coffee",
       "MakeDir": "./components/MakeDir.coffee",
+      "MimeRouter": "./components/MimeRouter.coffee",
+      "MimeDocumentRouter": "./components/MimeDocumentRouter.coffee",
       "ReadDir": "./components/ReadDir.coffee",
       "ReadFile": "./components/ReadFile.coffee",
       "ReadFileRaw": "./components/ReadFileRaw.coffee",
