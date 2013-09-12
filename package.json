@@ -38,6 +38,7 @@
       "MimeDocumentRouter": "./components/MimeDocumentRouter.coffee",
       "ReadDir": "./components/ReadDir.coffee",
       "ReadFile": "./components/ReadFile.coffee",
+      "ReadFileSync": "./components/ReadFileSync.coffee",
       "ReadFileRaw": "./components/ReadFileRaw.coffee",
       "Stat": "./components/Stat.coffee",
       "WriteFile": "./components/WriteFile.coffee",
