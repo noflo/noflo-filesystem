@@ -2,7 +2,7 @@
   "name": "noflo-filesystem",
   "description": "Filesystem components for the NoFlo flow-based programming environment",
   "author": "Henri Bergius <henri.bergius@iki.fi>",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "licenses": [
     {
       "type": "MIT",
@@ -38,6 +38,7 @@
       "MimeDocumentRouter": "./components/MimeDocumentRouter.coffee",
       "ReadDir": "./components/ReadDir.coffee",
       "ReadFile": "./components/ReadFile.coffee",
+      "ReadFileSync": "./components/ReadFileSync.coffee",
       "ReadFileRaw": "./components/ReadFileRaw.coffee",
       "Stat": "./components/Stat.coffee",
       "WriteFile": "./components/WriteFile.coffee",
