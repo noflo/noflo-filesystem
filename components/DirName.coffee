@@ -2,6 +2,7 @@ path = require 'path'
 noflo = require "noflo"
 
 class DirName extends noflo.Component
+  icon: 'folder'
   constructor: ->
     @inPorts =
       in: new noflo.Port()

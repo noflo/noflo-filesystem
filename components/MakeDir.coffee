@@ -3,6 +3,7 @@ path = require 'path'
 noflo = require 'noflo'
 
 class MakeDir extends noflo.AsyncComponent
+  icon: 'folder'
   constructor: ->
     @inPorts =
       in: new noflo.Port 'string'

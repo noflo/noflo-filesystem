@@ -2,6 +2,7 @@ fs = require 'fs'
 noflo = require 'noflo'
 
 class WriteFile extends noflo.Component
+  icon: 'save'
   constructor: ->
     @data = null
     @filename = null

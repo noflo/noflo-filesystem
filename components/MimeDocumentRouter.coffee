@@ -7,6 +7,7 @@ mimetype.set '.md', 'text/x-markdown'
 mimetype.set '.xml', 'text/xml'
 
 class MimeDocumentRouter extends noflo.Component
+  icon: 'code-fork'
   constructor: ->
     @routes = []
 

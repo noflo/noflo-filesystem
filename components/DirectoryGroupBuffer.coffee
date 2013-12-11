@@ -2,6 +2,7 @@ noflo = require 'noflo'
 path = require 'path'
 
 class DirectoryGroupBuffer extends noflo.Component
+  icon: 'folder'
   constructor: ->
     @buffers = {}
     @released = []

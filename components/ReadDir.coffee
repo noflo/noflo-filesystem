@@ -6,6 +6,7 @@ fs = require "fs"
 noflo = require "noflo"
 
 class ReadDir extends noflo.AsyncComponent
+  icon: 'folder-open'
   constructor: ->
     @inPorts =
       source: new noflo.Port()

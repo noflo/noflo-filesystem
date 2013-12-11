@@ -2,6 +2,7 @@ noflo = require "noflo"
 fs = require "fs"
 
 class WriteFileRaw extends noflo.Component
+  icon: 'save'
   constructor: ->
     @filename = null
     @data = null

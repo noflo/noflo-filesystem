@@ -2,6 +2,7 @@ fs = require 'fs'
 noflo = require "noflo"
 
 class CopyFile extends noflo.Component
+  icon: 'copy'
   constructor: ->
     @sourcePath = null
     @destPath = null

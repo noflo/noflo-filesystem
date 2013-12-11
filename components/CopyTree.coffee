@@ -2,6 +2,7 @@ fs = require 'fs.extra'
 noflo = require 'noflo'
 
 class CopyTree extends noflo.Component
+  icon: 'copy'
   constructor: ->
     @from = null
     @to = null
