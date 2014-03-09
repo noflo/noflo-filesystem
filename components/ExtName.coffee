@@ -1,8 +1,8 @@
 path = require 'path'
 noflo = require "noflo"
 
-class DirName extends noflo.Component
-  icon: 'folder'
+class ExtName extends noflo.Component
+  icon: 'file'
   constructor: ->
     @inPorts =
       in: new noflo.Port 'string'
@@ -13,7 +13,7 @@ class DirName extends noflo.Component
       @outPorts.out.beginGroup group
 
     @inPorts.in.on 'data', (data) =>
-      @outPorts.out.send path.dirname data
+      @outPorts.out.send path.extname data
 
     @inPorts.in.on 'endgroup', =>
       @outPorts.out.endGroup()
@@ -21,4 +21,4 @@ class DirName extends noflo.Component
     @inPorts.in.on 'disconnect', =>
       @outPorts.out.disconnect()
 
-exports.getComponent = -> new DirName
+exports.getComponent = -> new ExtName

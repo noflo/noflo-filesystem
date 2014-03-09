@@ -29,11 +29,13 @@
   "noflo": {
     "icon": "file",
     "components": {
+      "BaseName": "./components/BaseName.coffee",
       "CopyFile": "./components/CopyFile.coffee",
       "CopyTree": "./components/CopyTree.coffee",
       "DirName": "./components/DirName.coffee",
       "DirectoryBuffer": "./components/DirectoryBuffer.coffee",
       "DirectoryGroupBuffer": "./components/DirectoryGroupBuffer.coffee",
+      "ExtName": "./components/ExtName.coffee",
       "MakeDir": "./components/MakeDir.coffee",
       "MimeRouter": "./components/MimeRouter.coffee",
       "MimeDocumentRouter": "./components/MimeDocumentRouter.coffee",
