@@ -2,7 +2,7 @@
   "name": "noflo-filesystem",
   "description": "Filesystem components for the NoFlo flow-based programming environment",
   "author": "Henri Bergius <henri.bergius@iki.fi>",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "licenses": [
     {
       "type": "MIT",
@@ -17,7 +17,7 @@
     "node": ">=0.6.0"
   },
   "dependencies": {
-    "noflo": "0.4.x",
+    "noflo": "0.5.x",
     "fs.extra": "1.2.x",
     "mimetype": "0.0.5"
   },
