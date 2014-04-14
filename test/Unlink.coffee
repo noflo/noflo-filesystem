@@ -48,3 +48,21 @@ exports["test unlink dir"] = (test) ->
     test.fail()
     test.done()
   ins.send 'test-unlink-dir'
+
+
+exports["test unlink more than once"] = (test) ->
+  fs.writeFileSync('test-unlink-file1', 'TEST')
+  fs.writeFileSync('test-unlink-file2', 'TEST')
+  [c, ins, out, err] = setupComponent()
+  err.once 'data', (err) ->
+    test.fail err
+    test.done()
+  out.once 'data', (path) ->
+    test.equal path, 'test-unlink-file1'
+    out.once 'data', (path) ->
+      test.equal path, 'test-unlink-file2'
+      test.done()
+  ins.send 'test-unlink-file1'
+  ins.disconnect()
+  ins.send 'test-unlink-file2'
+  ins.disconnect()
