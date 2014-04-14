@@ -44,6 +44,7 @@
       "ReadFileSync": "./components/ReadFileSync.coffee",
       "ReadFileRaw": "./components/ReadFileRaw.coffee",
       "Stat": "./components/Stat.coffee",
+      "Unlink": "./components/Unlink.coffee",
       "WriteFile": "./components/WriteFile.coffee",
       "WriteFileRaw": "./components/WriteFileRaw.coffee"
     }
