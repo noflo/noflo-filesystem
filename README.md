@@ -11,5 +11,6 @@ This module provides components for the [NoFlo](http://noflojs.org/) flow-based 
 * ReadFile: Read the textual contents of a file
 * ReadFileRaw: Read the raw contents of a file
 * Stat: Get metadata about a file path
+* Unlink: Remove a file
 * WriteFile: Write textual contents to a file
 * WriteFileRaw: Write raw contents to a file

@@ -12,10 +12,10 @@ class Unlink extends noflo.AsyncComponent
     super()
 
   doAsync: (path, callback) ->
-    fs.unlink(path, (err) =>
+    fs.unlink path, (err) =>
       return callback err if err?
       return unless @outPorts.out.isAttached()
       @outPorts.out.send(path)
-      @outPorts.out.disconnect())
+      callback null
 
 exports.getComponent = -> new Unlink
