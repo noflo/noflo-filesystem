@@ -39,6 +39,7 @@
       "MakeDir": "./components/MakeDir.coffee",
       "MimeRouter": "./components/MimeRouter.coffee",
       "MimeDocumentRouter": "./components/MimeDocumentRouter.coffee",
+      "Normalize": "./components/Normalize.coffee",
       "ReadDir": "./components/ReadDir.coffee",
       "ReadFile": "./components/ReadFile.coffee",
       "ReadFileSync": "./components/ReadFileSync.coffee",
