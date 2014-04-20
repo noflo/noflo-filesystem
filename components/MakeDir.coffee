@@ -19,7 +19,6 @@ class MakeDir extends noflo.AsyncComponent
     @mkDir dirPath, (err) =>
       return callback err if err
       @outPorts.out.send dirPath
-      @outPorts.out.disconnect()
       callback null
 
   mkDir: (dirPath, callback) ->
