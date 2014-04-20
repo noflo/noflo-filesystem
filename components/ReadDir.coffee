@@ -21,7 +21,6 @@ class ReadDir extends noflo.AsyncComponent
       path = path.slice(0,-1) if path.slice(-1) == "/"
       sortedFiles = files.sort()
       @outPorts.out.send "#{path}/#{f}" for f in sortedFiles
-      @outPorts.out.disconnect()
       callback null
 
 exports.getComponent = -> new ReadDir()
