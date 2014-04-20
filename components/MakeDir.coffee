@@ -40,7 +40,7 @@ class MakeDir extends noflo.AsyncComponent
 
         # Check if the directory actually exists already
         else
-          fs.stat dirPath, (statErr, stat) =>
+          fs.stat dirPath, (statErr, stat) ->
             return callback err if statErr
             return callback err unless stat.isDirectory()
             callback null
