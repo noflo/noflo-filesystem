@@ -23,6 +23,5 @@ class Stat extends noflo.AsyncComponent
         "isCharacterDevice", "isFIFO", "isSocket"]
         stats[func] = stats[func]()
       @outPorts.out.send stats
-      @outPorts.out.disconnect()
 
 exports.getComponent = -> new Stat()
