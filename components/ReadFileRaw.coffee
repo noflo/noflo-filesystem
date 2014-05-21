@@ -14,7 +14,8 @@ class ReadFileRaw extends noflo.AsyncComponent
       error:
         datatype: 'object'
         required: false
-      super()
+
+    super()
 
   readBuffer: (fd, position, size, buffer, callback) ->
     fs.read fd, buffer, 0, buffer.length, position, (err, bytes, buffer) =>
