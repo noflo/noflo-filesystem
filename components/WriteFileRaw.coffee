@@ -15,7 +15,7 @@ class WriteFileRaw extends noflo.AsyncComponent
         datatype: 'string'
         description: 'File path to write to'
     @outPorts = new noflo.OutPorts
-      filename:
+      out:
         datatype: 'string'
         required: false
       error:
@@ -23,7 +23,7 @@ class WriteFileRaw extends noflo.AsyncComponent
         required: false
 
     @inPorts.filename.on "data", (@filename) =>
-    super 'in', 'filename'
+    super()
 
   doAsync: (data, callback) ->
     return callback new Error 'No filename provided' unless @filename
