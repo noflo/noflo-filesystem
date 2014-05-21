@@ -4,5 +4,5 @@ node_js:
 
 script: npm test
 
-notifications:
-  irc: "irc.freenode.org#fbp"
+before_script:
+  - npm install -g grunt-cli

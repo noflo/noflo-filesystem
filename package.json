@@ -22,37 +22,37 @@
     "mimetype": "0.0.5"
   },
   "devDependencies": {
-    "nodeunit": ">=0.6.0",
-    "coffeelint": "*",
-    "coffee-script": "1.4.x"
+    "grunt": "^0.4.5",
+    "grunt-noflo-manifest": "^0.1.5",
+    "grunt-coffeelint": "0.0.10",
+    "grunt-contrib-nodeunit": "^0.4.0"
   },
   "noflo": {
     "icon": "file",
     "components": {
-      "BaseName": "./components/BaseName.coffee",
-      "CopyFile": "./components/CopyFile.coffee",
-      "CopyTree": "./components/CopyTree.coffee",
-      "DirName": "./components/DirName.coffee",
-      "DirectoryBuffer": "./components/DirectoryBuffer.coffee",
-      "DirectoryGroupBuffer": "./components/DirectoryGroupBuffer.coffee",
-      "ExtName": "./components/ExtName.coffee",
-      "MakeDir": "./components/MakeDir.coffee",
-      "MimeRouter": "./components/MimeRouter.coffee",
-      "MimeDocumentRouter": "./components/MimeDocumentRouter.coffee",
-      "Normalize": "./components/Normalize.coffee",
-      "ReadDir": "./components/ReadDir.coffee",
-      "ReadFile": "./components/ReadFile.coffee",
-      "ReadFileSync": "./components/ReadFileSync.coffee",
-      "ReadFileRaw": "./components/ReadFileRaw.coffee",
-      "Resolve": "./components/Resolve.coffee",
-      "Stat": "./components/Stat.coffee",
-      "Unlink": "./components/Unlink.coffee",
-      "WriteFile": "./components/WriteFile.coffee",
-      "WriteFileRaw": "./components/WriteFileRaw.coffee"
+      "BaseName": "components/BaseName.coffee",
+      "CopyFile": "components/CopyFile.coffee",
+      "CopyTree": "components/CopyTree.coffee",
+      "DirName": "components/DirName.coffee",
+      "DirectoryBuffer": "components/DirectoryBuffer.coffee",
+      "DirectoryGroupBuffer": "components/DirectoryGroupBuffer.coffee",
+      "ExtName": "components/ExtName.coffee",
+      "MakeDir": "components/MakeDir.coffee",
+      "MimeDocumentRouter": "components/MimeDocumentRouter.coffee",
+      "MimeRouter": "components/MimeRouter.coffee",
+      "Normalize": "components/Normalize.coffee",
+      "ReadDir": "components/ReadDir.coffee",
+      "ReadFile": "components/ReadFile.coffee",
+      "ReadFileRaw": "components/ReadFileRaw.coffee",
+      "ReadFileSync": "components/ReadFileSync.coffee",
+      "Resolve": "components/Resolve.coffee",
+      "Stat": "components/Stat.coffee",
+      "Unlink": "components/Unlink.coffee",
+      "WriteFile": "components/WriteFile.coffee",
+      "WriteFileRaw": "components/WriteFileRaw.coffee"
     }
   },
   "scripts": {
-    "pretest": "./node_modules/.bin/coffeelint -r components",
-    "test": "./node_modules/.bin/nodeunit test"
+    "test": "grunt test"
   }
 }

@@ -17,9 +17,8 @@ class ReadDir extends noflo.AsyncComponent
       out:
         datatype: 'string'
       error:
-        datatype: 'error'
+        datatype: 'object'
         required: 'false'
-
     super 'source'
 
   doAsync: (path, callback) ->
