@@ -2,7 +2,7 @@ fs = require 'fs'
 noflo = require 'noflo'
 
 class WriteFile extends noflo.AsyncComponent
-  icon: 'save'
+  icon: 'floppy-o'
   description: 'Write a string into a file'
   constructor: ->
     @filename = null
