@@ -27,12 +27,9 @@ class WriteFileRaw extends noflo.AsyncComponent
 
   doAsync: (data, callback) ->
     return callback new Error 'No filename provided' unless @filename
-    fs.open @filename, 'w', (err, fd) =>
+    fs.writeFile @filename, data, (err) =>
       return callback err if err
-
-      fs.write fd, data, 0, data.length, 0, (err, bytes, buffer) =>
-        return callback err if err
-        @outPorts.filename.send filename
-        do callback
+      @outPorts.out.send @filename
+      do callback
 
 exports.getComponent = -> new WriteFileRaw

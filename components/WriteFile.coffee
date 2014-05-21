@@ -26,9 +26,10 @@ class WriteFile extends noflo.AsyncComponent
     super 'in', 'filename'
 
   doAsync: (data, callback) ->
-    fs.writeFile filename, data, 'utf-8', (err) =>
+    return callback new Error 'No filename provided' unless @filename
+    fs.writeFile @filename, data, 'utf-8', (err) =>
       return callback err if err
-      @outPorts.out.send filename
+      @outPorts.out.send @filename
       do callback
 
 exports.getComponent = -> new WriteFile
