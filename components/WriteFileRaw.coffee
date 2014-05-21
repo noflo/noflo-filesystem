@@ -1,37 +1,38 @@
-noflo = require "noflo"
-fs = require "fs"
+fs = require 'fs'
+noflo = require 'noflo'
 
-class WriteFileRaw extends noflo.Component
+class WriteFileRaw extends noflo.AsyncComponent
   icon: 'save'
+  description: 'Write a buffer into a file'
   constructor: ->
     @filename = null
-    @data = null
 
-    @inPorts =
-      in: new noflo.Port
-      filename: new noflo.Port
-    @outPorts =
-      filename: new noflo.Port
-      error: new noflo.Port
+    @inPorts = new noflo.InPorts
+      in:
+        datatype: 'array'
+        description: 'Buffer to write'
+      filename:
+        datatype: 'string'
+        description: 'File path to write to'
+    @outPorts = new noflo.OutPorts
+      filename:
+        datatype: 'string'
+        required: false
+      error:
+        datatype: 'object'
+        required: false
 
-    @inPorts.in.on "data", (data) =>
-      @data = data
-      @writeFile @filename, data if @filename
+    @inPorts.filename.on "data", (@filename) =>
+    super 'in', 'filename'
 
-    @inPorts.filename.on 'endgroup', =>
-      @filename = null
-
-    @inPorts.filename.on "data", (data) =>
-      @filename = data
-      @writeFile data, @data if @data
-
-  writeFile: (filename, data) ->
-    fs.open filename, 'w', (err, fd) =>
-      return @outPorts.error.send err if err
+  doAsync: (data, callback) ->
+    return callback new Error 'No filename provided' unless @filename
+    fs.open @filename, 'w', (err, fd) =>
+      return callback err if err
 
       fs.write fd, data, 0, data.length, 0, (err, bytes, buffer) =>
-        return @outPorts.error.send err if err
+        return callback err if err
         @outPorts.filename.send filename
-        @outPorts.filename.disconnect()
+        do callback
 
 exports.getComponent = -> new WriteFileRaw

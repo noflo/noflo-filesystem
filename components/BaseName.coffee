@@ -3,13 +3,19 @@ noflo = require "noflo"
 
 class BaseName extends noflo.Component
   icon: 'file'
+  description: 'Get the base name of the file'
   constructor: ->
     @ext = ''
-    @inPorts =
-      in: new noflo.Port 'string'
-      ext: new noflo.Port 'string'
-    @outPorts =
-      out: new noflo.Port 'string'
+    @inPorts = new noflo.InPorts
+      in:
+        datatype: 'string'
+        description: 'File path'
+      ext:
+        datatype: 'string'
+        description: 'Extension, if any'
+    @outPorts = new noflo.OutPorts
+      out:
+        datatype: 'string'
 
     @inPorts.in.on 'begingroup', (group) =>
       @outPorts.out.beginGroup group

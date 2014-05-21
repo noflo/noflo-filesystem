@@ -1,37 +1,34 @@
 fs = require 'fs'
 noflo = require 'noflo'
 
-class WriteFile extends noflo.Component
+class WriteFile extends noflo.AsyncComponent
   icon: 'save'
+  description: 'Write a string into a file'
   constructor: ->
-    @data = null
     @filename = null
 
-    @inPorts =
-      in: new noflo.Port
-      filename: new noflo.Port
-    @outPorts =
-      out: new noflo.Port
-      error: new noflo.Port
+    @inPorts = new noflo.InPorts
+      in:
+        datatype: 'string'
+        description: 'Contents to write'
+      filename:
+        datatype: 'string'
+        description: 'File path to write to'
+    @outPorts = new noflo.OutPorts
+      filename:
+        datatype: 'string'
+        required: false
+      error:
+        datatype: 'object'
+        required: false
 
-    @inPorts.in.on 'data', (data) =>
-      if @filename
-        @writeFile @filename, data
-        @filename = null
-        return
-      @data = data
+    @inPorts.filename.on 'data', (@filename) =>
+    super 'in', 'filename'
 
-    @inPorts.filename.on 'data', (data) =>
-      unless @data is null
-        @writeFile data, @data
-        @data = null
-        return
-      @filename = data
-
-  writeFile: (filename, data) ->
+  doAsync: (data, callback) ->
     fs.writeFile filename, data, 'utf-8', (err) =>
-      return @outPorts.error.send err if err
+      return callback err if err
       @outPorts.out.send filename
-      @outPorts.out.disconnect()
+      do callback
 
 exports.getComponent = -> new WriteFile

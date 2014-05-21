@@ -1,33 +1,39 @@
 fs = require "fs"
 noflo = require "noflo"
 
-class ReadFileRaw extends noflo.Component
+class ReadFileRaw extends noflo.AsyncComponent
+  description: 'Read a file and send it out as a buffer'
   constructor: ->
-    @inPorts =
-      source: new noflo.Port()
-    @outPorts =
-      out: new noflo.Port()
-      error: new noflo.Port()
+    @inPorts = new noflo.InPorts
+      in:
+        datatype: 'string'
+        description: 'Source file path'
+    @outPorts = new noflo.OutPorts
+      out:
+        datatype: 'array'
+      error:
+        datatype: 'object'
+        required: false
+      super()
 
-    @inPorts.source.on "data", (data) =>
-      @readFile data
-
-  readBuffer: (fd, position, size, buffer) ->
+  readBuffer: (fd, position, size, buffer, callback) ->
     fs.read fd, buffer, 0, buffer.length, position, (err, bytes, buffer) =>
       @outPorts.out.send buffer.slice 0, bytes
       position += buffer.length
       if position >= size
-        return @outPorts.out.disconnect()
-      @readBuffer fd, position, size, buffer
+        @outPorts.out.endGroup()
+        callback null
+      @readBuffer fd, position, size, buffer, callback
 
-  readFile: (filename) ->
+  doAsync: (filename, callback) ->
     fs.open filename, 'r', (err, fd) =>
-      return @outPorts.error.send err if err
+      return callback err if err
       
       fs.fstat fd, (err, stats) =>
-        return @outPorts.error.send err if err
+        return callback err if err
 
         buffer = new Buffer stats.size
-        @readBuffer fd, 0, stats.size, buffer
+        @outPorts.out.beginGroup filename
+        @readBuffer fd, 0, stats.size, buffer, callback
 
 exports.getComponent = -> new ReadFileRaw

@@ -3,11 +3,15 @@ noflo = require "noflo"
 
 class ExtName extends noflo.Component
   icon: 'file'
+  description: 'Get the file extension for a file path'
   constructor: ->
-    @inPorts =
-      in: new noflo.Port 'string'
-    @outPorts =
-      out: new noflo.Port 'string'
+    @inPorts = new noflo.InPorts
+      in:
+        datatype: 'string'
+        description: 'File path'
+    @outPorts = new noflo.OutPorts
+      out:
+        datatype: 'string'
 
     @inPorts.in.on 'begingroup', (group) =>
       @outPorts.out.beginGroup group

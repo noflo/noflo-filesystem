@@ -4,16 +4,21 @@ noflo = require 'noflo'
 
 class MakeDir extends noflo.AsyncComponent
   icon: 'folder'
+  description: 'Create a directory'
   constructor: ->
-    @inPorts =
-      in: new noflo.Port 'string'
-    @outPorts =
-      out: new noflo.Port 'string'
-      error: new noflo.Port 'object'
+    @inPorts = new noflo.InPorts
+      in:
+        datatype: 'string'
+        description: 'Directory path to create'
+    @outPorts = new noflo.OutPorts
+      out:
+        datatype: 'string'
+        required: false
+      error:
+        datatype: 'object'
+        required: false
 
     super()
-
-  sendPath: (dirPath) ->
 
   doAsync: (dirPath, callback) ->
     @mkDir dirPath, (err) =>

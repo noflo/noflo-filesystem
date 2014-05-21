@@ -3,16 +3,22 @@ noflo = require "noflo"
 
 class ReadFileSync extends noflo.Component
   description: 'Just like ReadFile, but blocks until content is read'
-
   constructor: ->
     @encoding = 'utf-8'
-
-    @inPorts =
-      in: new noflo.Port
-      encoding: new noflo.Port
-    @outPorts =
-      out: new noflo.Port
-      error: new noflo.Port
+    @inPorts = new noflo.InPorts
+      in:
+        datatype: 'string'
+        description: 'Source file path'
+      encoding:
+        datatype: 'string'
+        description: 'File encoding'
+        default: 'utf-8'
+    @outPorts = new noflo.OutPorts
+      out:
+        datatype: 'string'
+      error:
+        datatype: 'object'
+        required: false
 
     @inPorts.encoding.on 'data', (@encoding) =>
 
@@ -21,11 +27,13 @@ class ReadFileSync extends noflo.Component
 
     @inPorts.in.on 'data', (filename) =>
       try
-        @outPorts.out.send fs.readFileSync filename, @encoding
+        content = fs.readFileSync filename, @encoding
       catch e
-        if @outPorts.error.isAttached()
-          @outPorts.error.send e
-          @outPorts.error.disconnect()
+        @outPorts.error.send e
+        @outPorts.error.disconnect()
+      @outPorts.out.beginGroup filename
+      @outPorts.out.send content
+      @outPorts.out.endGroup()
 
     @inPorts.in.on 'endgroup', (group) =>
       @outPorts.out.endGroup()
