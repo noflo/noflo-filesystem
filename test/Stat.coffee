@@ -1,5 +1,6 @@
 stat = require "../components/Stat"
 socket = require('noflo').internalSocket
+path = require 'path'
 
 setupComponent = ->
     c = stat.getComponent()
@@ -16,7 +17,7 @@ exports["test stat nonexistent path"] = (test) ->
     err.once "data", (err) ->
         test.equal err.errno, 34
         test.equal err.code, 'ENOENT'
-        test.equal err.path, 'doesnotexist'
+        test.equal path.basename(err.path), 'doesnotexist'
         test.done()
     ins.send "doesnotexist"
 

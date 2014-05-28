@@ -1,6 +1,7 @@
 fs = require "fs"
 readdir = require "../components/ReadDir"
 socket = require('noflo').internalSocket
+path = require 'path'
 
 setupComponent = ->
     c = readdir.getComponent()
@@ -25,7 +26,7 @@ exports["test error reading dir"] = (test) ->
   err.once "data", (err) ->
     test.equal err.errno, 34
     test.equal err.code, 'ENOENT'
-    test.equal err.path, 'doesnotexist'
+    test.equal path.basename(err.path), 'doesnotexist'
     test.done()
   src.send "doesnotexist"
 exports["test reading dir"] = (test) ->

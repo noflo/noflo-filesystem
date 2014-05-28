@@ -1,6 +1,8 @@
 unlink = require '../components/Unlink'
 socket = require('noflo').internalSocket
 fs = require 'fs'
+path = require 'path'
+os = require 'os'
 
 setupComponent = ->
   c = unlink.getComponent()
@@ -39,9 +41,13 @@ exports["test unlink dir"] = (test) ->
   fs.mkdirSync('test-unlink-dir')
   [c, ins, out, err] = setupComponent()
   err.once 'data', (err) ->
-    test.equal err.errno, 28
-    test.equal err.code, 'EISDIR'
-    test.equal err.path, 'test-unlink-dir'
+    if os.platform() is 'win32'
+      test.equal err.errno, 50
+      test.equal err.code, 'EPERM'
+    else
+      test.equal err.errno, 28
+      test.equal err.code, 'EISDIR'
+    test.equal path.basename(err.path), 'test-unlink-dir'
     fs.rmdirSync('test-unlink-dir')
     test.done()
   out.once 'data', (path) ->

@@ -1,4 +1,5 @@
 normalize = require '../components/Normalize'
+path = require 'path'
 socket = require('noflo').internalSocket
 
 setupComponent = ->
@@ -11,8 +12,8 @@ setupComponent = ->
 
 exports['test multiple / path'] = (test) ->
   [c, ins, out] = setupComponent()
-  out.once 'data', (path) ->
-    test.equal path, 'test/Resolve.coffee'
+  out.once 'data', (p) ->
+    test.equal p, path.normalize 'test////Resolve.coffee'
     test.ok true
     test.done()
   ins.send 'test////Resolve.coffee'
@@ -20,8 +21,8 @@ exports['test multiple / path'] = (test) ->
 
 exports['test ../ removal'] = (test) ->
   [c, ins, out] = setupComponent()
-  out.once 'data', (path) ->
-    test.equal path, 'Resolve.coffee'
+  out.once 'data', (p) ->
+    test.equal p, 'Resolve.coffee'
     test.ok true
     test.done()
   ins.send 'test/../Resolve.coffee'
@@ -29,8 +30,8 @@ exports['test ../ removal'] = (test) ->
 
 exports['test ../../ removal'] = (test) ->
   [c, ins, out] = setupComponent()
-  out.once 'data', (path) ->
-    test.equal path, '../Resolve.coffee'
+  out.once 'data', (p) ->
+    test.equal p, path.normalize 'test/../../Resolve.coffee'
     test.ok true
     test.done()
   ins.send 'test/../../Resolve.coffee'

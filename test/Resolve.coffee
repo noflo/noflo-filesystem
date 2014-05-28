@@ -1,5 +1,6 @@
 resolve = require '../components/Resolve'
 socket = require('noflo').internalSocket
+path = require 'path'
 
 setupComponent = ->
   c = resolve.getComponent()
@@ -11,8 +12,8 @@ setupComponent = ->
 
 exports['test relative path'] = (test) ->
   [c, ins, out] = setupComponent()
-  out.once 'data', (path) ->
-    test.equal path[0], '/'
+  out.once 'data', (p) ->
+    test.equal p[0], path.resolve '/'
     test.ok true
     test.done()
   ins.send 'test/Resolve.coffee'
