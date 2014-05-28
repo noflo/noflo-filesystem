@@ -19,7 +19,7 @@ exports['test unlink nonexistent path'] = (test) ->
   err.once 'data', (err) ->
     test.equal err.errno, 34
     test.equal err.code, 'ENOENT'
-    test.equal err.path, 'doesnotexist'
+    test.equal path.basename(err.path), 'doesnotexist'
     test.done()
   out.once 'data', (path) ->
     test.fail()

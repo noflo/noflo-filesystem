@@ -13,7 +13,7 @@ setupComponent = ->
 exports['test relative path'] = (test) ->
   [c, ins, out] = setupComponent()
   out.once 'data', (p) ->
-    test.equal p[0], path.resolve '/'
+    test.equal p[0], path.resolve('/')[0]
     test.ok true
     test.done()
   ins.send 'test/Resolve.coffee'
