@@ -1,34 +1,28 @@
 path = require 'path'
 noflo = require "noflo"
 
-class BaseName extends noflo.Component
-  icon: 'file'
-  description: 'Get the base name of the file'
-  constructor: ->
-    @ext = ''
-    @inPorts = new noflo.InPorts
-      in:
-        datatype: 'string'
-        description: 'File path'
-      ext:
-        datatype: 'string'
-        description: 'Extension, if any'
-    @outPorts = new noflo.OutPorts
-      out:
-        datatype: 'string'
+exports.getComponent = ->
+  c = new noflo.Component
+  c.icon = 'file'
+  c.description = 'Get the base name of the file'
 
-    @inPorts.in.on 'begingroup', (group) =>
-      @outPorts.out.beginGroup group
+  c.inPorts.add 'in',
+    datatype: 'string'
+    description: 'File path'
+  c.inPorts.add 'ext',
+    datatype: 'string'
+    description: 'Extension, if any'
+    required: false
+  c.outPorts.add 'out',
+    datatype: 'string'
 
-    @inPorts.in.on 'data', (data) =>
-      @outPorts.out.send path.basename data, @ext
+  noflo.helpers.WirePattern c,
+    in: ['in']
+    params: ['ext']
+    out: 'out'
+    forwardGroups: true
+  , (data, groups, out) ->
+    ext = c.params.ext or ''
+    out.send path.basename data, ext
 
-    @inPorts.in.on 'endgroup', =>
-      @outPorts.out.endGroup()
-
-    @inPorts.in.on 'disconnect', =>
-      @outPorts.out.disconnect()
-
-    @inPorts.ext.on 'data', (@ext) =>
-
-exports.getComponent = -> new BaseName
+  c

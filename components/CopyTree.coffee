@@ -1,34 +1,31 @@
 fs = require 'fs.extra'
 noflo = require 'noflo'
 
-class CopyTree extends noflo.Component
-  icon: 'copy'
-  constructor: ->
-    @from = null
-    @to = null
+exports.getComponent = ->
+  c = new noflo.Component
+  c.icon = 'copy'
+  c.description = 'Copy a directory tree'
 
-    @inPorts =
-      from: new noflo.Port
-      to: new noflo.Port
-    @outPorts =
-      out: new noflo.Port
-      error: new noflo.Port
+  c.inPorts.add 'from',
+    datatype: 'string'
+    description: 'Source path'
+  c.inPorts.add 'to',
+    datatype: 'string'
+    description: 'Target path'
+  c.outPorts.add 'out',
+    datatype: 'string'
+  c.outPorts.add 'error',
+    datatype: 'object'
 
-    @inPorts.from.on 'data', (data) =>
-      @from = data
-      do @copy if @to
+  noflo.helpers.WirePattern c,
+    in: ['from', 'to']
+    out: 'out'
+    forwardGroups: true
+    async: true
+  , (data, groups, out, callback) ->
+    fs.copyRecursive data.from, data.to, (err) ->
+      return callback err if err
+      out.send data.to
+      do callback
 
-    @inPorts.to.on 'data', (data) =>
-      @to = data
-      do @copy if @from
-
-  copy: ->
-    fs.copyRecursive @from, @to, (err) =>
-      if err
-        @outPorts.error.send err
-        @outPorts.error.disconnect()
-        return
-      @outPorts.out.send @to
-      @outPorts.out.disconnect()
-
-exports.getComponent = -> new CopyTree
+  c

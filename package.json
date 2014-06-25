@@ -17,7 +17,7 @@
     "node": ">=0.6.0"
   },
   "dependencies": {
-    "noflo": "0.5.x",
+    "noflo": "^0.5.6",
     "fs.extra": "1.2.x",
     "mimetype": "0.0.5"
   },

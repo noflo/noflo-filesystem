@@ -1,35 +1,33 @@
 fs = require 'fs'
 noflo = require 'noflo'
 
-class WriteFileRaw extends noflo.AsyncComponent
-  icon: 'floppy-o'
-  description: 'Write a buffer into a file'
-  constructor: ->
-    @filename = null
+exports.getComponent = ->
+  c = new noflo.Component
+  c.icon = 'floppy-o'
+  c.description = 'Write a buffer into a file'
 
-    @inPorts = new noflo.InPorts
-      in:
-        datatype: 'array'
-        description: 'Buffer to write'
-      filename:
-        datatype: 'string'
-        description: 'File path to write to'
-    @outPorts = new noflo.OutPorts
-      out:
-        datatype: 'string'
-        required: false
-      error:
-        datatype: 'object'
-        required: false
+  c.inPorts.add 'in',
+    datatype: 'buffer'
+    description: 'Contents to write'
+  c.inPorts.add 'filename',
+    datatype: 'string'
+    description: 'File path to write to'
+  c.outPorts.add 'out',
+    datatype: 'string'
+    required: false
+  c.outPorts.add 'error',
+    datatype: 'object'
+    required: false
 
-    @inPorts.filename.on "data", (@filename) =>
-    super()
-
-  doAsync: (data, callback) ->
-    return callback new Error 'No filename provided' unless @filename
-    fs.writeFile @filename, data, (err) =>
+  noflo.helpers.WirePattern c,
+    in: ['in', 'filename']
+    out: 'out'
+    forwardGroups: true
+    async: true
+  , (data, groups, out, callback) ->
+    fs.writeFile data.filename, data.in, (err) ->
       return callback err if err
-      @outPorts.out.send @filename
+      out.send data.filename
       do callback
 
-exports.getComponent = -> new WriteFileRaw
+  c
