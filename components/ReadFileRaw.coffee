@@ -23,7 +23,7 @@ class ReadFileRaw extends noflo.AsyncComponent
       position += buffer.length
       if position >= size
         @outPorts.out.endGroup()
-        callback null
+        return callback null
       @readBuffer fd, position, size, buffer, callback
 
   doAsync: (filename, callback) ->
