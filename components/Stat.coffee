@@ -29,8 +29,14 @@ exports.getComponent = ->
     fs.stat path, (err, stats) =>
       return callback err if err
       stats.path = path
-      for func in ["isFile","isDirectory","isBlockDevice",
-        "isCharacterDevice", "isFIFO", "isSocket"]
+      for func in [
+        "isFile"
+        "isDirectory"
+        "isBlockDevice"
+        "isCharacterDevice"
+        "isFIFO"
+        "isSocket"
+      ]
         stats[func] = stats[func]()
       out.beginGroup path
       out.send stats
