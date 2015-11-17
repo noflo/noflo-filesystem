@@ -14,7 +14,7 @@
   "dependencies": {
     "noflo": "0.5.14",
     "fs.extra": "1.2.1",
-    "mimetype": "0.0.5"
+    "mimetype": "0.0.8"
   },
   "devDependencies": {
     "grunt": "0.4.5",
