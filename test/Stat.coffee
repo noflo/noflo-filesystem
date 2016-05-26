@@ -15,7 +15,6 @@ setupComponent = ->
 exports["test stat nonexistent path"] = (test) ->
     [c, ins, out, err] = setupComponent()
     err.once "data", (err) ->
-        test.equal err.errno, 34
         test.equal err.code, 'ENOENT'
         test.equal path.basename(err.path), 'doesnotexist'
         test.done()
