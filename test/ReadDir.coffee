@@ -24,7 +24,6 @@ exports.tearDown = (callback) ->
 exports["test error reading dir"] = (test) ->
   [c, src, out, err] = setupComponent()
   err.once "data", (err) ->
-    test.equal err.errno, 34
     test.equal err.code, 'ENOENT'
     test.equal path.basename(err.path), 'doesnotexist'
     test.done()

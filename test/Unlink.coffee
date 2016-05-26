@@ -17,7 +17,6 @@ setupComponent = ->
 exports['test unlink nonexistent path'] = (test) ->
   [c, ins, out, err] = setupComponent()
   err.once 'data', (err) ->
-    test.equal err.errno, 34
     test.equal err.code, 'ENOENT'
     test.equal path.basename(err.path), 'doesnotexist'
     test.done()
@@ -42,10 +41,8 @@ exports["test unlink dir"] = (test) ->
   [c, ins, out, err] = setupComponent()
   err.once 'data', (err) ->
     if os.platform() is 'win32'
-      test.equal err.errno, 50
       test.equal err.code, 'EPERM'
     else
-      test.equal err.errno, 28
       test.equal err.code, 'EISDIR'
     test.equal path.basename(err.path), 'test-unlink-dir'
     fs.rmdirSync('test-unlink-dir')
