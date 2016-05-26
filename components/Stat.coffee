@@ -26,7 +26,7 @@ exports.getComponent = ->
     forwardGroups: true
     async: true
   , (path, groups, out, callback) ->
-    fs.stat path, (err, stats) =>
+    fs.stat path, (err, stats) ->
       return callback err if err
       stats.path = path
       for func in [
