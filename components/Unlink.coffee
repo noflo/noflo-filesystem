@@ -1,27 +1,32 @@
 fs = require 'fs'
 noflo = require 'noflo'
 
-class Unlink extends noflo.AsyncComponent
-  icon: 'trash'
-  description: 'Remove a file'
-  constructor: ->
-    @inPorts = new noflo.InPorts
-      in:
-        datatype: 'string'
-        description: 'File path to remove'
-    @outPorts = new noflo.OutPorts
-      out:
-        datatype: 'string'
-        required: false
-      error:
-        datatype: 'object'
-        required: false
-    super()
+exports.getComponent = ->
+  c = new noflo.Component
 
-  doAsync: (path, callback) ->
-    fs.unlink path, (err) =>
-      return callback err if err?
-      @outPorts.out.send(path)
-      callback null
+  c.icon = 'trash'
+  c.description = 'Remove a file'
 
-exports.getComponent = -> new Unlink
+  c.inPorts = new noflo.InPorts
+    in:
+      datatype: 'string'
+      description: 'File path to remove'
+  c.outPorts = new noflo.OutPorts
+    out:
+      datatype: 'string'
+      required: false
+    error:
+      datatype: 'object'
+      required: false
+
+  c.process (input, output) ->
+    path = input.getData 'in'
+    try
+      fs.unlink path, (err) =>
+        console.log 'did it go here and not in catch?', err.stack if error?
+        return output.done err if err?
+        c.outPorts.out.send(path)
+        output.done()
+    catch e
+      console.log "did it triggger catch?"
+      output.done e

@@ -1,26 +1,21 @@
 path = require 'path'
 noflo = require 'noflo'
 
-class Normalize extends noflo.Component
-  icon: 'font'
-  description: 'Normalize a path'
-  constructor: ->
-    @inPorts = new noflo.InPorts
-      in:
-        datatype: 'string'
-        description: 'File path to normalize'
-    @outPorts = new noflo.OutPorts
-      out:
-        datatype: 'string'
-        required: false
+exports.getComponent = ->
+  c = new noflo.Component
 
-    @inPorts.in.on 'begingroup', (group) =>
-      @outPorts.out.beginGroup group
-    @inPorts.in.on 'data', (data) =>
-      @outPorts.out.send path.normalize data
-    @inPorts.in.on 'endgroup', () =>
-      @outPorts.out.endGroup()
-    @inPorts.in.on 'disconnect', () =>
-      @outPorts.out.disconnect()
+  c.icon = 'font'
+  c.description = 'Normalize a path'
+  c.inPorts = new noflo.InPorts
+    in:
+      datatype: 'string'
+      description: 'File path to normalize'
+  c.outPorts = new noflo.OutPorts
+    out:
+      datatype: 'string'
+      required: false
 
-exports.getComponent = -> new Normalize
+  c.process (input, output) ->
+    data = input.getData 'in'
+    c.outPorts.out.send path.normalize data
+    output.done()
