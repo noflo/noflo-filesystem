@@ -13,13 +13,19 @@ module.exports = ->
     coffeelint:
       components: ['components/*.coffee']
 
-    # Unit tests
-    nodeunit:
-      all: ['test/*.coffee']
+    # BDD tests on Node.js
+    mochaTest:
+      nodejs:
+        src: ['spec/*.coffee']
+        options:
+          reporter: 'spec'
+          require: 'coffee-script/register'
+          grep: process.env.TESTS
 
   # Grunt plugins used for building
   @loadNpmTasks 'grunt-noflo-manifest'
   @loadNpmTasks 'grunt-coffeelint'
-  @loadNpmTasks 'grunt-contrib-nodeunit'
+  @loadNpmTasks 'grunt-mocha-test'
 
-  @registerTask 'test', ['coffeelint', 'noflo_manifest', 'nodeunit']
+  @registerTask 'test', ['coffeelint', 'noflo_manifest', 'mochaTest']
+  @registerTask 'default', ['test']

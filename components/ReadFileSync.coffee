@@ -1,44 +1,41 @@
 fs = require "fs"
 noflo = require "noflo"
 
-class ReadFileSync extends noflo.Component
-  description: 'Just like ReadFile, but blocks until content is read'
-  constructor: ->
-    @encoding = 'utf-8'
-    @inPorts = new noflo.InPorts
-      in:
-        datatype: 'string'
-        description: 'Source file path'
-      encoding:
-        datatype: 'string'
-        description: 'File encoding'
-        default: 'utf-8'
-    @outPorts = new noflo.OutPorts
-      out:
-        datatype: 'string'
-      error:
-        datatype: 'object'
-        required: false
+exports.getComponent = ->
+  component = new noflo.Component
 
-    @inPorts.encoding.on 'data', (@encoding) =>
+  c.description = 'Just like ReadFile, but blocks until content is read'
+  c.encoding = 'utf-8'
+  c.inPorts = new noflo.InPorts
+    in:
+      datatype: 'string'
+      description: 'Source file path'
+    encoding:
+      datatype: 'string'
+      description: 'File encoding'
+      default: 'utf-8'
+  c.outPorts = new noflo.OutPorts
+    out:
+      datatype: 'string'
+    error:
+      datatype: 'object'
+      required: false
 
-    @inPorts.in.on 'begingroup', (group) =>
-      @outPorts.out.beginGroup group
+  c.forwardBrackets =
+    in: ['out', 'error']
+    encoding: ['out', 'error']
 
-    @inPorts.in.on 'data', (filename) =>
-      try
-        content = fs.readFileSync filename, @encoding
-      catch e
-        @outPorts.error.send e
-        @outPorts.error.disconnect()
-      @outPorts.out.beginGroup filename
-      @outPorts.out.send content
-      @outPorts.out.endGroup()
+  c.process (input, output) ->
+    return unless input.has 'in', 'encoding'
 
-    @inPorts.in.on 'endgroup', (group) =>
-      @outPorts.out.endGroup()
+    filename = input.getData 'in'
+    encoding = input.getData 'encoding'
 
-    @inPorts.in.on 'disconnect', =>
-      @outPorts.out.disconnect()
-
-exports.getComponent = -> new ReadFileSync
+    try
+      content = fs.readFileSync filename, encoding
+    catch e
+      c.outPorts.error.send e
+      c.outPorts.error.disconnect()
+    c.outPorts.out.beginGroup filename
+    c.outPorts.out.send content
+    c.outPorts.out.endGroup()

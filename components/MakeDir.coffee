@@ -2,31 +2,25 @@ fs = require 'fs'
 path = require 'path'
 noflo = require 'noflo'
 
-class MakeDir extends noflo.AsyncComponent
-  icon: 'folder'
-  description: 'Create a directory'
-  constructor: ->
-    @inPorts = new noflo.InPorts
-      in:
-        datatype: 'string'
-        description: 'Directory path to create'
-    @outPorts = new noflo.OutPorts
-      out:
-        datatype: 'string'
-        required: false
-      error:
-        datatype: 'object'
-        required: false
+exports.getComponent = ->
+  c = new noflo.Component
 
-    super()
+  c.icon = 'folder'
+  c.description = 'Create a directory'
+  c.inPorts = new noflo.InPorts
+    in:
+      datatype: 'string'
+      description: 'Directory path to create'
+      required: true
+  c.outPorts = new noflo.OutPorts
+    out:
+      datatype: 'string'
+      required: false
+    error:
+      datatype: 'object'
+      required: false
 
-  doAsync: (dirPath, callback) ->
-    @mkDir dirPath, (err) =>
-      return callback err if err
-      @outPorts.out.send dirPath
-      callback null
-
-  mkDir: (dirPath, callback) ->
+  c.mkDir = (dirPath, callback) ->
     orig = dirPath
     dirPath = path.resolve dirPath
 
@@ -39,9 +33,9 @@ class MakeDir extends noflo.AsyncComponent
       switch err.code
         # Parent missing, create
         when 'ENOENT'
-          @mkDir path.dirname(dirPath), (err) =>
+          c.mkDir path.dirname(dirPath), (err) =>
             return callback err if err
-            @mkDir dirPath, callback
+            c.mkDir dirPath, callback
 
         # Check if the directory actually exists already
         else
@@ -50,4 +44,9 @@ class MakeDir extends noflo.AsyncComponent
             return callback err unless stat.isDirectory()
             callback null
 
-exports.getComponent = -> new MakeDir
+  c.process (input, output) ->
+    dirPath = input.getData 'in'
+    c.mkDir dirPath, (err) =>
+      return output.done err if err
+      c.outPorts.out.send dirPath
+      output.done()
