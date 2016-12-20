@@ -17,9 +17,9 @@
     "mimetype": "~0.0.8"
   },
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-noflo-manifest": "^0.1.11",
-    "grunt-coffeelint": "^0.0.15",
+    "grunt": "^1.0.1",
+    "grunt-noflo-manifest": "^0.1.12",
+    "grunt-coffeelint": "^0.0.16",
     "grunt-contrib-nodeunit": "^1.0.0"
   },
   "noflo": {
@@ -28,9 +28,9 @@
       "BaseName": "components/BaseName.coffee",
       "CopyFile": "components/CopyFile.coffee",
       "CopyTree": "components/CopyTree.coffee",
-      "DirName": "components/DirName.coffee",
       "DirectoryBuffer": "components/DirectoryBuffer.coffee",
       "DirectoryGroupBuffer": "components/DirectoryGroupBuffer.coffee",
+      "DirName": "components/DirName.coffee",
       "ExtName": "components/ExtName.coffee",
       "MakeDir": "components/MakeDir.coffee",
       "MimeDocumentRouter": "components/MimeDocumentRouter.coffee",
