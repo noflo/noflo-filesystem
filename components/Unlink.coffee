@@ -1,6 +1,8 @@
 fs = require 'fs'
 noflo = require 'noflo'
 
+# @runtime noflo-nodejs
+
 class Unlink extends noflo.AsyncComponent
   icon: 'trash'
   description: 'Remove a file'

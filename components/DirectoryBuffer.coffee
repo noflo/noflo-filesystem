@@ -1,6 +1,8 @@
 noflo = require 'noflo'
 path = require 'path'
 
+# @runtime noflo-nodejs
+
 class DirectoryBuffer extends noflo.Component
   icon: 'folder'
   constructor: ->

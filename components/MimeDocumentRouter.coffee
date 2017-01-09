@@ -1,6 +1,8 @@
 noflo = require 'noflo'
 mimetype = require 'mimetype'
 
+# @runtime noflo-nodejs
+
 # Extra MIME types config
 mimetype.set '.markdown', 'text/x-markdown'
 mimetype.set '.md', 'text/x-markdown'

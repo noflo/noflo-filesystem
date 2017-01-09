@@ -1,6 +1,8 @@
 fs = require 'fs'
 noflo = require 'noflo'
 
+# @runtime noflo-nodejs
+
 exports.getComponent = ->
   c = new noflo.Component
   c.icon = 'floppy-o'

@@ -1,6 +1,8 @@
 path = require 'path'
 noflo = require 'noflo'
 
+# @runtime noflo-nodejs
+
 class Normalize extends noflo.Component
   icon: 'font'
   description: 'Normalize a path'

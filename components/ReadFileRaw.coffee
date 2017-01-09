@@ -1,6 +1,8 @@
 fs = require "fs"
 noflo = require "noflo"
 
+# @runtime noflo-nodejs
+
 class ReadFileRaw extends noflo.AsyncComponent
   description: 'Read a file and send it out as a buffer'
   constructor: ->

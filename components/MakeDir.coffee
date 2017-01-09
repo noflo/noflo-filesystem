@@ -2,6 +2,8 @@ fs = require 'fs'
 path = require 'path'
 noflo = require 'noflo'
 
+# @runtime noflo-nodejs
+
 class MakeDir extends noflo.AsyncComponent
   icon: 'folder'
   description: 'Create a directory'

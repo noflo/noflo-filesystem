@@ -1,6 +1,8 @@
 fs = require "fs"
 noflo = require "noflo"
 
+# @runtime noflo-nodejs
+
 class ReadFileSync extends noflo.Component
   description: 'Just like ReadFile, but blocks until content is read'
   constructor: ->

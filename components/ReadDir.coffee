@@ -5,6 +5,8 @@
 fs = require "fs"
 noflo = require "noflo"
 
+# @runtime noflo-nodejs
+
 class ReadDir extends noflo.AsyncComponent
   icon: 'folder-open'
   description: 'Get a list of file paths inside a directory'

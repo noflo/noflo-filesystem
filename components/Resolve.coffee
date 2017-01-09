@@ -1,6 +1,8 @@
 path = require 'path'
 noflo = require 'noflo'
 
+# @runtime noflo-nodejs
+
 class Resolve extends noflo.Component
   icon: 'font'
   description: 'Resolve a relative path to an absolute one'
