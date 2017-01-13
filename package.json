@@ -32,6 +32,7 @@
       "DirectoryGroupBuffer": "components/DirectoryGroupBuffer.coffee",
       "DirName": "components/DirName.coffee",
       "ExtName": "components/ExtName.coffee",
+      "JoinPath": "components/JoinPath.coffee",
       "MakeDir": "components/MakeDir.coffee",
       "MimeDocumentRouter": "components/MimeDocumentRouter.coffee",
       "MimeRouter": "components/MimeRouter.coffee",
