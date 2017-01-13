@@ -30,14 +30,14 @@ exports["test error reading dir"] = (test) ->
   src.send "doesnotexist"
 exports["test reading dir"] = (test) ->
   [c, src, out, err] = setupComponent()
-  expect = ["test/testdir/a","test/testdir/b"]
+  expect = [path.join('test/testdir', 'a'), path.join('test/testdir', 'b')]
   out.on "data", (data) ->
     test.equal data, expect.shift()
     test.done() if expect.length == 0
   src.send "test/testdir"
 exports["test reading dir with slash"] = (test) ->
   [c, src, out, err] = setupComponent()
-  expect = ["test/testdir/a","test/testdir/b"]
+  expect = [path.join('test/testdir', 'a'), path.join('test/testdir', 'b')]
   out.on "data", (data) ->
     test.equal data, expect.shift()
     test.done() if expect.length == 0
