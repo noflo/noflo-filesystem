@@ -29,14 +29,14 @@ exports.getComponent = ->
 
       if err.code is 'ENOENT'
         # Parent missing, create
-        mkDir path.dirname(dirPath), (err) ->
+        mkdir path.dirname(dirPath), (err) ->
           return callback err if err
-          mkDir dirPath, callback
+          mkdir dirPath, callback
         return
       # Check if the directory actually exists already
       fs.stat dirPath, (statErr, stat) ->
         return callback err if statErr
-        unless stats.isDirectory()
+        unless stat.isDirectory()
           return callback new Error "#{dirPath} is not a directory"
         callback null
 
@@ -44,7 +44,7 @@ exports.getComponent = ->
     forwardGroups: true
     async: true
   , (dirPath, groups, out, callback) ->
-    mkDir dirPath, (err) ->
+    mkdir dirPath, (err) ->
       return callback err if err
       out.send dirPath
       do callback
