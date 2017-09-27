@@ -27,6 +27,7 @@ exports.getComponent = ->
 
   noflo.helpers.WirePattern c,
     forwardGroups: true
+    params: ['encoding']
     async: true
   , (fileName, groups, out, callback) ->
     encoding = if c.params?.encoding then c.params.encoding else 'utf-8'
