@@ -8,41 +8,39 @@ mimetype.set '.markdown', 'text/x-markdown'
 mimetype.set '.md', 'text/x-markdown'
 mimetype.set '.xml', 'text/xml'
 
-class MimeRouter extends noflo.Component
-  icon: 'code-fork'
-  constructor: ->
-    @routes = []
+exports.getComponent = ->
+  c = new noflo.Component
+  c.icon = 'code-fork'
+  c.inPorts.add 'routes',
+    datatype: 'array'
+    control: true
+  c.inPorts.add 'in',
+    datatype: 'string'
+  c.outPorts.add 'out',
+    datatype: 'string'
+    addressable: true
+  c.outPorts.add 'missed',
+    datatype: 'string'
+  c.forwardBrackets =
+    in: ['out', 'missed']
+  c.process (input, output) ->
+    return unless input.hasData 'routes', 'in'
+    [routes, data] = input.getData 'routes', 'in'
+    if typeof routes is 'string'
+      routes = routes.split ','
+    mime = mimetype.lookup data
+    unless mime
+      output.sendDone
+        missed: data
+      return
 
-    @inPorts =
-      types: new noflo.Port 'all'
-      routes: new noflo.Port 'all'
-      in: new noflo.ArrayPort 'string'
-    @outPorts =
-      out: new noflo.ArrayPort 'string'
-      missed: new noflo.Port 'string'
-
-    @inPorts.routes.on 'data', (data) =>
-      if typeof data is 'string'
-        data = data.split ','
-      @routes = data
-
-    @inPorts.in.on 'data', (data) =>
-      mime = mimetype.lookup data
-      return @missed data unless mime
-
-      selected = null
-      for matcher, id in @routes
-        selected = id unless mime.indexOf(matcher) is -1
-      return @missed data if selected is null
-
-      @outPorts.out.send data, selected
-
-    @inPorts.in.on 'disconnect', =>
-      @outPorts.out.disconnect()
-      @outPorts.missed.disconnect() if @outPorts.missed.isAttached()
-
-  missed: (data) ->
-    return unless @outPorts.missed.isAttached()
-    @outPorts.missed.send data
-
-exports.getComponent = -> new MimeRouter
+    selected = null
+    for matcher, id in routes
+      selected = id unless mime.indexOf(matcher) is -1
+    if selected is null
+      output.sendDone
+        missed: data
+      return
+    output.sendDone
+      out: new noflo.IP 'data', data,
+        index: selected
