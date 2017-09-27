@@ -6,10 +6,10 @@ path = require 'path'
 exports.getComponent = ->
   c = new noflo.Component
   c.icon = 'folder'
-  c.description = 'Collect filenames to a buffer until released'
+  c.description = 'Collect file paths to a buffer until released'
   c.inPorts.add 'collect',
     datatype: 'string'
-    description: 'Filenames to collect'
+    description: 'File paths to collect'
   c.inPorts.add 'release',
     datatype: 'string'
     description: 'Directory to release'
