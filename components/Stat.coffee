@@ -44,5 +44,3 @@ exports.getComponent = ->
       out.send stats
       out.endGroup()
       do callback
-
-  c
