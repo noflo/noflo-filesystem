@@ -29,5 +29,3 @@ exports.getComponent = ->
       return callback err if err
       out.send data.to
       do callback
-
-  c

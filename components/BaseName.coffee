@@ -23,8 +23,8 @@ exports.getComponent = ->
     params: ['ext']
     out: 'out'
     forwardGroups: true
-  , (data, groups, out) ->
+    async: true
+  , (data, groups, out, callback) ->
     ext = c.params.ext or ''
     out.send path.basename data, ext
-
-  c
+    do callback

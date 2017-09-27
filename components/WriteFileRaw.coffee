@@ -31,5 +31,3 @@ exports.getComponent = ->
       return callback err if err
       out.send data.filename
       do callback
-
-  c

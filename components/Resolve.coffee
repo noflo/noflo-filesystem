@@ -3,25 +3,17 @@ noflo = require 'noflo'
 
 # @runtime noflo-nodejs
 
-class Resolve extends noflo.Component
-  icon: 'font'
-  description: 'Resolve a relative path to an absolute one'
-  constructor: ->
-    @inPorts = new noflo.InPorts
-      in:
-        datatype: 'string'
-        description: 'Path to resolve'
-    @outPorts = new noflo.OutPorts
-      out:
-        datatype: 'string'
-
-    @inPorts.in.on 'begingroup', (group) =>
-      @outPorts.out.beginGroup group
-    @inPorts.in.on 'data', (data) =>
-      @outPorts.out.send path.resolve data
-    @inPorts.in.on 'endgroup', =>
-      @outPorts.out.endGroup()
-    @inPorts.in.on 'disconnect', =>
-      @outPorts.out.disconnect()
-
-exports.getComponent = -> new Resolve
+exports.getComponent = ->
+  c = new noflo.Component
+  c.icon = 'font'
+  c.description = 'Resolve a relative path to an absolute one'
+  c.inPorts.add 'in',
+    datatype: 'string'
+    description: 'Path to resolve'
+  c.outPorts.add 'out',
+    datatype: 'string'
+  c.process (input, output) ->
+    return unless input.hasData 'in'
+    data = input.getData 'in'
+    output.sendDone
+      out: path.resolve data

@@ -41,5 +41,3 @@ exports.getComponent = ->
     rs.on 'end', ->
       out.send data.destination
       do callback
-
-  c
