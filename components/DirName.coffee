@@ -18,7 +18,7 @@ exports.getComponent = ->
     in: ['in']
     out: 'out'
     forwardGroups: true
-  , (data, groups, out) ->
+    async: true
+  , (data, groups, out, callback) ->
     out.send path.dirname data
-
-  c
+    do callback
