@@ -3,44 +3,32 @@ noflo = require "noflo"
 
 # @runtime noflo-nodejs
 
-class ReadFileSync extends noflo.Component
-  description: 'Just like ReadFile, but blocks until content is read'
-  constructor: ->
-    @encoding = 'utf-8'
-    @inPorts = new noflo.InPorts
-      in:
-        datatype: 'string'
-        description: 'Source file path'
-      encoding:
-        datatype: 'string'
-        description: 'File encoding'
-        default: 'utf-8'
-    @outPorts = new noflo.OutPorts
-      out:
-        datatype: 'string'
-      error:
-        datatype: 'object'
-        required: false
+exports.getComponent = ->
+  c = new noflo.Component
+  c.description = 'Just like ReadFile, but blocks until content is read'
+  c.inPorts.add 'in',
+    datatype: 'string'
+    description: 'Source file path'
+  c.inPorts.add 'encoding',
+    datatype: 'string'
+    description: 'File encoding'
+    default: 'utf-8'
+    control: true
+  c.outPorts.add 'out',
+    datatype: 'string'
+    required: false
+  c.outPorts.add 'error',
+    datatype: 'object'
 
-    @inPorts.encoding.on 'data', (@encoding) =>
-
-    @inPorts.in.on 'begingroup', (group) =>
-      @outPorts.out.beginGroup group
-
-    @inPorts.in.on 'data', (filename) =>
-      try
-        content = fs.readFileSync filename, @encoding
-      catch e
-        @outPorts.error.send e
-        @outPorts.error.disconnect()
-      @outPorts.out.beginGroup filename
-      @outPorts.out.send content
-      @outPorts.out.endGroup()
-
-    @inPorts.in.on 'endgroup', (group) =>
-      @outPorts.out.endGroup()
-
-    @inPorts.in.on 'disconnect', =>
-      @outPorts.out.disconnect()
-
-exports.getComponent = -> new ReadFileSync
+  c.process (input, output) ->
+    return unless input.hasData 'in'
+    encoding = 'utf-8'
+    if input.hasData('encoding')
+      encoding = input.getData('encoding')
+    filename = input.getData 'in'
+    try
+      content = fs.readFileSync filename, encoding
+    catch e
+      return output.done e
+    output.sendDone
+      out: content
