@@ -19,7 +19,7 @@
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-coffeelint": "^0.0.16",
-    "grunt-contrib-nodeunit": "^1.0.0"
+    "grunt-contrib-nodeunit": "^2.0.0"
   },
   "noflo": {
     "icon": "file"
