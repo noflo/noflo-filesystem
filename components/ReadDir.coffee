@@ -22,15 +22,18 @@ exports.getComponent = ->
     datatype: 'object'
     required: false
 
-  noflo.helpers.WirePattern c,
-    in: ['source']
-    forwardGroups: true
-    async: true
-  , (dirPath, groups, out, callback) ->
+  c.process (input, output) ->
+    return unless input.hasData 'source'
+    dirPath = input.getData 'source'
     fs.readdir dirPath, (err, files) ->
-      return callback err if err
+      if err
+        output.done err
+        return
       sortedFiles = files.sort()
-      out.beginGroup dirPath
-      out.send path.join(dirPath, f) for f in sortedFiles
-      out.endGroup()
-      callback null
+      output.send
+        out: new noflo.IP 'openBracket', dirPath
+      for f in sortedFiles
+        output.send
+          out: path.join dirPath, f
+      output.sendDone
+        out: new noflo.IP 'closeBracket', dirPath

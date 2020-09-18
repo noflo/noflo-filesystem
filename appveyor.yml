@@ -6,17 +6,15 @@ init:
 
 environment:
   matrix:
-    - nodejs_version: 6
+    - nodejs_version: 12
 
 install:
   - ps: Install-Product node $env:nodejs_version
-  - npm install -g grunt-cli
   - npm install
-  - npm build
 
 build: off
   
 test_script:
   - node --version
   - npm --version
-  - cmd: grunt test --no-color
+  - cmd: npm test

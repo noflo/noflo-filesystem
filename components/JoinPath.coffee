@@ -17,11 +17,16 @@ exports.getComponent = ->
     required: true
   c.outPorts.add 'out',
     datatype: 'string'
+  c.outPorts.add 'error',
+    datatype: 'object'
+    required: false
 
-  noflo.helpers.WirePattern c,
-    in: ['directory', 'file']
-    forwardGroups: true
-    async: true
-  , (data, groups, out, callback) ->
-    out.send path.join data.directory, data.file
-    do callback
+  c.forwardbrackets =
+    directory: ['out', 'error']
+    file: ['out', 'error']
+
+  c.process (input, output) ->
+    return unless input.hasData 'directory', 'file'
+    [ directory, file ] = input.getData 'directory', 'file'
+    output.sendDone
+      out: path.join directory, file

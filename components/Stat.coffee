@@ -22,14 +22,10 @@ exports.getComponent = ->
     datatype: 'object'
     required: false
 
-  noflo.helpers.WirePattern c,
-    in: ['in']
-    out: 'out'
-    forwardGroups: true
-    async: true
-  , (path, groups, out, callback) ->
+  c.process (input, output) ->
+    path = input.getData 'in'
     fs.stat path, (err, stats) ->
-      return callback err if err
+      return output.done err if err
       stats.path = path
       for func in [
         "isFile"
@@ -40,7 +36,9 @@ exports.getComponent = ->
         "isSocket"
       ]
         stats[func] = stats[func]()
-      out.beginGroup path
-      out.send stats
-      out.endGroup()
-      do callback
+      output.send
+        out: new noflo.IP 'openBracket', path
+      output.send
+        out: stats
+      output.sendDone
+        out: new noflo.IP 'closeBracket', path

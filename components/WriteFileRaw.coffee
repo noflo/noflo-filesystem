@@ -21,13 +21,10 @@ exports.getComponent = ->
     datatype: 'object'
     required: false
 
-  noflo.helpers.WirePattern c,
-    in: ['in', 'filename']
-    out: 'out'
-    forwardGroups: true
-    async: true
-  , (data, groups, out, callback) ->
-    fs.writeFile data.filename, data.in, (err) ->
-      return callback err if err
-      out.send data.filename
-      do callback
+  c.process (input, output) ->
+    return unless input.hasData 'in', 'filename'
+    [ filename, buffer ] = input.getData 'filename', 'buffer'
+    fs.writeFile filename, buffer, (err) ->
+      return output.done err if err
+      output.sendDone
+        out: data.filename

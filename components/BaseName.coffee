@@ -14,17 +14,16 @@ exports.getComponent = ->
   c.inPorts.add 'ext',
     datatype: 'string'
     description: 'Extension, if any'
+    control: true
     required: false
   c.outPorts.add 'out',
     datatype: 'string'
 
-  noflo.helpers.WirePattern c,
-    in: ['in']
-    params: ['ext']
-    out: 'out'
-    forwardGroups: true
-    async: true
-  , (data, groups, out, callback) ->
-    ext = c.params.ext or ''
-    out.send path.basename data, ext
-    do callback
+  c.process (input, output) ->
+    return unless input.hasData 'in'
+    ext = ''
+    if input.hasData 'ext'
+      ext = input.getData 'ext'
+    data = input.getData 'in'
+    output.sendDone
+      out: path.basename data, ext
