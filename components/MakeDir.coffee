@@ -40,11 +40,11 @@ exports.getComponent = ->
           return callback new Error "#{dirPath} is not a directory"
         callback null
 
-  noflo.helpers.WirePattern c,
-    forwardGroups: true
-    async: true
-  , (dirPath, groups, out, callback) ->
+  c.process (input, output) ->
+    dirPath = input.getData 'in'
     mkdir dirPath, (err) ->
-      return callback err if err
-      out.send dirPath
-      do callback
+      if err
+        output.done err
+        return
+      output.sendDone
+        out: dirPath

@@ -18,6 +18,7 @@ exports.getComponent = ->
     datatype: 'string'
     description: 'File encoding'
     default: 'utf-8'
+    control: true
   c.outPorts.add 'out',
     datatype: 'string'
     required: false
@@ -25,15 +26,17 @@ exports.getComponent = ->
     datatype: 'object'
     required: false
 
-  noflo.helpers.WirePattern c,
-    forwardGroups: true
-    params: ['encoding']
-    async: true
-  , (fileName, groups, out, callback) ->
-    encoding = if c.params?.encoding then c.params.encoding else 'utf-8'
+  c.process (input, output) ->
+    return unless input.hasData 'in'
+    fileName = input.getData 'in'
+    encoding = input.getData 'encoding'
     fs.readFile fileName, encoding, (err, data) ->
-      return callback err if err
-      out.beginGroup fileName
-      out.send data
-      out.endGroup()
-      callback null
+      if err
+        output.done err
+        return
+      output.send
+        out: new noflo.IP 'openBracket', fileName
+      output.send
+        out: data
+      output.sendDone
+        out: new noflo.IP 'closeBracket', fileName

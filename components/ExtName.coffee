@@ -14,11 +14,6 @@ exports.getComponent = ->
   c.outPorts.add 'out',
     datatype: 'string'
 
-  noflo.helpers.WirePattern c,
-    in: ['in']
-    out: 'out'
-    forwardGroups: true
-    async: true
-  , (data, groups, out, callback) ->
-    out.send path.extname data
-    do callback
+  c.process (input, output) ->
+    output.sendDone
+      out: path.extname input.getData 'in'

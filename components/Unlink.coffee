@@ -17,11 +17,9 @@ exports.getComponent = ->
     datatype: 'object'
     required: false
 
-  noflo.helpers.WirePattern c,
-    forwardGroups: true
-    async: true
-  , (path, groups, out, callback) ->
+  c.process (input, output) ->
+    path = input.getData 'in'
     fs.unlink path, (err) ->
-      return callback err if err
-      out.send path
-      callback null
+      return output.done err if err
+      output.sendDone
+        out: path

@@ -15,26 +15,31 @@ exports.getComponent = ->
     datatype: 'object'
     required: false
 
-  readBuffer = (fd, position, size, buffer, out, callback) ->
+  readBuffer = (fd, position, size, buffer, output, callback) ->
     fs.read fd, buffer, 0, buffer.length, position, (err, bytes, buffer) ->
-      return callback err if err
-      out.send buffer.slice 0, bytes
+      if err
+        callback err
+        return
+      output.send
+        out: buffer.slice 0, bytes
       position += buffer.length
       if position >= size
-        out.endGroup()
+        output.sendDone
+          out: new noflo.IP 'closeBracket'
         return callback null
       readBuffer fd, position, size, buffer, out, callback
 
-  noflo.helpers.WirePattern c,
-    forwardGroups: true
-    async: true
-  , (filename, groups, out, callback) ->
+
+  c.process (input, output) ->
+    return unless input.hasData 'in'
+    filename = input.getData 'in'
     fs.open filename, 'r', (err, fd) ->
-      return callback err if err
+      return output.done err if err
       
       fs.fstat fd, (err, stats) ->
-        return callback err if err
+        return output.done err if err
 
         buffer = new Buffer stats.size
-        out.beginGroup filename
-        readBuffer fd, 0, stats.size, buffer, out, callback
+        output.send
+          out: new noflo.IP 'openBracket', filename
+        readBuffer fd, 0, stats.size, buffer, output, output.done

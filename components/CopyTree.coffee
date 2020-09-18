@@ -19,13 +19,16 @@ exports.getComponent = ->
   c.outPorts.add 'error',
     datatype: 'object'
 
-  noflo.helpers.WirePattern c,
-    in: ['from', 'to']
-    out: 'out'
-    forwardGroups: true
-    async: true
-  , (data, groups, out, callback) ->
-    fs.copyRecursive data.from, data.to, (err) ->
-      return callback err if err
-      out.send data.to
-      do callback
+  c.forwardbrackets =
+    from: ['out', 'error']
+    to: ['out', 'error']
+
+  c.process (input, output) ->
+    return unless input.hasData 'from', 'to'
+    data = input.getData 'from', 'to'
+    fs.copyRecursive data[0], data[1], (err) ->
+      if err
+        output.done err
+        return
+      output.sendDone
+        out: data[1]

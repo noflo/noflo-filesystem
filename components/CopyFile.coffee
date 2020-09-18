@@ -19,25 +19,19 @@ exports.getComponent = ->
     datatype: 'object'
     required: false
 
-  noflo.helpers.WirePattern c,
-    in: ['source', 'destination']
-    out: 'out'
-    forwardGroups: true
-    async: true
-  , (data, groups, out, callback) ->
-    handleError = (err) ->
-      if err.code is 'EMFILE'
-        # TODO: How to postpone with WirePattern?
-        # https://github.com/noflo/noflo/issues/203
-        return callback err
-      callback err
+  c.forwardbrackets =
+    source: ['out', 'error']
+    destination: ['out', 'error']
 
+  c.process (input, output) ->
+    return unless input.hasData 'source', 'destination'
+    [ source, destination ] = input.getData 'source', 'destination'
     rs = fs.createReadStream data.source
     ws = fs.createWriteStream data.destination
-    rs.on 'error', handleError
-    ws.on 'error', handleError
+    rs.on 'error', output.done
+    ws.on 'error', output.done
 
     rs.pipe ws
     rs.on 'end', ->
-      out.send data.destination
-      do callback
+      output.sendDone
+        out: data.destination
