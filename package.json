@@ -2,7 +2,7 @@
   "name": "noflo-filesystem",
   "description": "Filesystem components for the NoFlo flow-based programming environment",
   "author": "Henri Bergius <henri.bergius@iki.fi>",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "license": "MIT",
   "repository": {
     "type": "git",

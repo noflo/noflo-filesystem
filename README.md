@@ -5,6 +5,8 @@ This module provides components for the [NoFlo](http://noflojs.org/) flow-based 
 
 ## Changes
 
+* 2.2.0 (January 8 2021)
+  - Ported from CoffeeScript to ES6
 * 2.1.0 (September 21 2020)
   - Ported all components from WirePattern to Process API
   - Removed deprecated `ReadFileSync` component
