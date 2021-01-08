@@ -7,7 +7,7 @@
 const resolve = require('../components/PathToMime');
 const socket = require('noflo').internalSocket;
 
-const setupComponent = function() {
+const setupComponent = function () {
   const c = resolve.getComponent();
   const ins = socket.createSocket();
   const out = socket.createSocket();
@@ -16,9 +16,9 @@ const setupComponent = function() {
   return [c, ins, out];
 };
 
-exports['test .jpg'] = function(test) {
+exports['test .jpg'] = function (test) {
   const [c, ins, out] = Array.from(setupComponent());
-  out.once('data', function(p) {
+  out.once('data', (p) => {
     test.equal(p, 'image/jpeg');
     return test.done();
   });
@@ -26,9 +26,9 @@ exports['test .jpg'] = function(test) {
   return ins.disconnect();
 };
 
-exports['test .JPEG'] = function(test) {
+exports['test .JPEG'] = function (test) {
   const [c, ins, out] = Array.from(setupComponent());
-  out.once('data', function(p) {
+  out.once('data', (p) => {
     test.equal(p, 'image/jpeg');
     return test.done();
   });
@@ -36,9 +36,9 @@ exports['test .JPEG'] = function(test) {
   return ins.disconnect();
 };
 
-exports['test .mp4'] = function(test) {
+exports['test .mp4'] = function (test) {
   const [c, ins, out] = Array.from(setupComponent());
-  out.once('data', function(p) {
+  out.once('data', (p) => {
     test.equal(p, 'video/mp4');
     return test.done();
   });
@@ -46,9 +46,9 @@ exports['test .mp4'] = function(test) {
   return ins.disconnect();
 };
 
-exports['test .png'] = function(test) {
+exports['test .png'] = function (test) {
   const [c, ins, out] = Array.from(setupComponent());
-  out.once('data', function(p) {
+  out.once('data', (p) => {
     test.equal(p, 'image/png');
     return test.done();
   });

@@ -8,7 +8,7 @@ const resolve = require('../components/Resolve');
 const socket = require('noflo').internalSocket;
 const path = require('path');
 
-const setupComponent = function() {
+const setupComponent = function () {
   const c = resolve.getComponent();
   const ins = socket.createSocket();
   const out = socket.createSocket();
@@ -17,13 +17,13 @@ const setupComponent = function() {
   return [c, ins, out];
 };
 
-exports['test relative path'] = function(test) {
+exports['test relative path'] = function (test) {
   const [c, ins, out] = Array.from(setupComponent());
-  out.once('data', function(p) {
+  out.once('data', (p) => {
     test.equal(p[0], path.resolve('/')[0]);
     test.ok(true);
     return test.done();
   });
-  ins.send('test/Resolve.coffee');
+  ins.send('test/Resolve.js');
   return ins.disconnect();
 };

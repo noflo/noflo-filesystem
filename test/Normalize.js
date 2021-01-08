@@ -8,7 +8,7 @@ const normalize = require('../components/Normalize');
 const path = require('path');
 const socket = require('noflo').internalSocket;
 
-const setupComponent = function() {
+const setupComponent = function () {
   const c = normalize.getComponent();
   const ins = socket.createSocket();
   const out = socket.createSocket();
@@ -17,35 +17,35 @@ const setupComponent = function() {
   return [c, ins, out];
 };
 
-exports['test multiple / path'] = function(test) {
+exports['test multiple / path'] = function (test) {
   const [c, ins, out] = Array.from(setupComponent());
-  out.once('data', function(p) {
-    test.equal(p, path.normalize('test////Resolve.coffee'));
+  out.once('data', (p) => {
+    test.equal(p, path.normalize('test////Resolve.js'));
     test.ok(true);
     return test.done();
   });
-  ins.send('test////Resolve.coffee');
+  ins.send('test////Resolve.js');
   return ins.disconnect();
 };
 
-exports['test ../ removal'] = function(test) {
+exports['test ../ removal'] = function (test) {
   const [c, ins, out] = Array.from(setupComponent());
-  out.once('data', function(p) {
-    test.equal(p, 'Resolve.coffee');
+  out.once('data', (p) => {
+    test.equal(p, 'Resolve.js');
     test.ok(true);
     return test.done();
   });
-  ins.send('test/../Resolve.coffee');
+  ins.send('test/../Resolve.js');
   return ins.disconnect();
 };
 
-exports['test ../../ removal'] = function(test) {
+exports['test ../../ removal'] = function (test) {
   const [c, ins, out] = Array.from(setupComponent());
-  out.once('data', function(p) {
-    test.equal(p, path.normalize('test/../../Resolve.coffee'));
+  out.once('data', (p) => {
+    test.equal(p, path.normalize('test/../../Resolve.js'));
     test.ok(true);
     return test.done();
   });
-  ins.send('test/../../Resolve.coffee');
+  ins.send('test/../../Resolve.js');
   return ins.disconnect();
 };

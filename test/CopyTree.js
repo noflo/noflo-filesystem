@@ -4,10 +4,10 @@
  * DS102: Remove unnecessary code created because of implicit returns
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const readenv = require("../components/CopyTree");
+const readenv = require('../components/CopyTree');
 const socket = require('noflo').internalSocket;
 
-const setupComponent = function() {
+const setupComponent = function () {
   const c = readenv.getComponent();
   const from = socket.createSocket();
   const to = socket.createSocket();
@@ -20,7 +20,7 @@ const setupComponent = function() {
   return [c, from, to, out, err];
 };
 
-exports['test component instantiation'] = function(test) {
+exports['test component instantiation'] = function (test) {
   const [c, from, to, out, err] = Array.from(setupComponent());
 
   test.ok(from);

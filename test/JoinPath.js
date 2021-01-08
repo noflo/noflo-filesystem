@@ -8,7 +8,7 @@ const join = require('../components/JoinPath');
 const path = require('path');
 const socket = require('noflo').internalSocket;
 
-const setupComponent = function() {
+const setupComponent = function () {
   const c = join.getComponent();
   const directory = socket.createSocket();
   const file = socket.createSocket();
@@ -19,12 +19,12 @@ const setupComponent = function() {
   return [c, directory, file, out];
 };
 
-exports['test path joining'] = function(test) {
+exports['test path joining'] = function (test) {
   const [c, directory, file, out] = Array.from(setupComponent());
-  out.once('data', function(p) {
+  out.once('data', (p) => {
     test.equal(p, __filename);
     return test.done();
   });
   directory.send(__dirname);
-  return file.send('JoinPath.coffee');
+  return file.send('JoinPath.js');
 };
