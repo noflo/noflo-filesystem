@@ -1,4 +1,4 @@
-const fs = require('fs.extra');
+const fs = require('fs-extra');
 const noflo = require('noflo');
 
 // @runtime noflo-nodejs
