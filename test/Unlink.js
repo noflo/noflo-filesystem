@@ -53,7 +53,7 @@ exports['test unlink dir'] = function (test) {
   fs.mkdirSync('test-unlink-dir');
   const [c, ins, out, err] = Array.from(setupComponent());
   err.once('data', (err) => {
-    if (os.platform() === 'win32') {
+    if (os.platform() === 'win32' || os.platform() === 'darwin') {
       test.equal(err.code, 'EPERM');
     } else {
       test.equal(err.code, 'EISDIR');
