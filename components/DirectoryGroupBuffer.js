@@ -1,90 +1,116 @@
-const noflo = require('noflo');
-const path = require('path');
+import path from "node:path";
 
-// @runtime noflo-nodejs
+import { Component, IP } from "@noflo/noflo";
 
-exports.getComponent = function () {
-  const c = new noflo.Component();
-  c.icon = 'folder';
-  c.description = 'Collect packets to a group buffer until released';
-  c.inPorts.add('collect', {
-    datatype: 'all',
-    description: 'Data to collect, grouped by file path',
+/**
+ * Collects packets to a buffer keyed by the directory derived from the
+ * packet group trail until released. Instance-level state (as in 1.x).
+ * @returns {import("@noflo/noflo").Component} The configured component
+ */
+export function getComponent() {
+  const c = new Component({
+    icon: "folder",
+    description: "Collect packets to a group buffer until released",
+    inPorts: {
+      collect: {
+        datatype: "all",
+        description: "Data to collect, grouped by file path",
+      },
+      release: {
+        datatype: "string",
+        description: "Directory to release",
+      },
+    },
+    outPorts: {
+      out: { datatype: "string" },
+    },
   });
-  c.inPorts.add('release', {
-    datatype: 'string',
-    description: 'Directory to release',
-  });
-  c.outPorts.add('out',
-    { datatype: 'string' });
-  c.tearDown = function (callback) {
-    delete c.buffers;
-    delete c.released;
-    callback();
-  };
-  return c.process((input, output) => {
-    if (!c.buffers) { c.buffers = {}; }
-    if (!c.released) { c.released = []; }
 
-    function releasePacket(packet) {
-      packet.groups.forEach((group) => {
-        output.send({ out: new noflo.IP('openBracket', group) });
-      });
-      output.send({ out: new noflo.IP('data', packet.data) });
-      packet.groups.forEach((group) => {
-        output.send({ out: new noflo.IP('closeBracket', group) });
-      });
+  /** @type {Record<string, { data: unknown, groups: unknown[] }[]>} */
+  const buffers = {};
+  /** @type {string[]} */
+  const released = [];
+  c.tearDown = async () => {
+    for (const key of Object.keys(buffers)) {
+      delete buffers[key];
     }
+    released.length = 0;
+  };
 
-    if (input.hasData('release')) {
+  c.process((input, output) => {
+    /**
+     * @param {{ data: unknown, groups: unknown[] }} packet
+     */
+    const releasePacket = (packet) => {
+      for (const group of packet.groups) {
+        output.send({ out: new IP("openBracket", group) });
+      }
+      output.send({ out: new IP("data", packet.data) });
+      for (const group of packet.groups) {
+        output.send({ out: new IP("closeBracket", group) });
+      }
+    };
+
+    if (input.hasData("release")) {
       // Releasing a directory
-      const release = input.getData('release');
-      if (c.released.indexOf(release) !== -1) {
+      const release = input.getData("release");
+      if (released.includes(release)) {
         // Already released, skip
         output.done();
         return;
       }
-      c.released.push(release);
-      if (!c.buffers[release]) {
+      released.push(release);
+      if (!buffers[release]) {
         output.done();
         return;
       }
-      c.buffers[release].forEach((packet) => {
+      for (const packet of buffers[release]) {
         releasePacket(packet);
-      });
-      delete c.buffers[release];
+      }
+      delete buffers[release];
       output.done();
       return;
     }
 
-    if (!input.hasStream('collect')) { return; }
-    const collect = input.getStream('collect');
+    if (!input.hasStream("collect")) {
+      return;
+    }
+    const stream = /** @type {import("@noflo/noflo").IP[]} */ (
+      input.getStream("collect")
+    );
+    /** @type {unknown[]} */
     const groups = [];
-    collect.forEach((ip) => {
-      if (ip.type === 'openBracket') {
+    for (const ip of stream) {
+      if (ip.type === "openBracket") {
         groups.push(ip.data);
-        return;
+        continue;
       }
-      if (ip.type === 'data') {
+      if (ip.type === "data") {
         const packet = {
           data: ip.data,
           groups: groups.slice(0),
         };
-        const directory = path.dirname(packet.groups.join(path.sep));
-        if (c.released.indexOf(directory) !== -1) {
+        const directory = path.dirname(
+          packet.groups.map(String).join(path.sep),
+        );
+        if (released.includes(directory)) {
           // Already released
           releasePacket(packet);
-          return;
+          continue;
         }
         // Add to buffer
-        if (!c.buffers[directory]) { c.buffers[directory] = []; }
-        c.buffers[directory].push(packet);
-        return;
+        if (!buffers[directory]) {
+          buffers[directory] = [];
+        }
+        buffers[directory].push(packet);
+        continue;
       }
-      if (ip.type === 'closeBracket') {
+      if (ip.type === "closeBracket") {
         groups.pop();
       }
-    });
+    }
     output.done();
   });
-};
+
+  return c;
+}

@@ -1,40 +1,38 @@
-const fs = require('fs');
-const noflo = require('noflo');
+import fs from "node:fs";
 
-// @runtime noflo-nodejs
+import { Component } from "@noflo/noflo";
 
-exports.getComponent = function () {
-  const c = new noflo.Component();
-  c.icon = 'copy';
-  c.description = 'Copy a file';
-
-  c.inPorts.add('source',
-    { datatype: 'string' });
-  c.inPorts.add('destination',
-    { datatype: 'string' });
-  c.outPorts.add('out', {
-    datatype: 'string',
-    required: false,
+/** @returns {import("@noflo/noflo").Component} The configured component */
+export function getComponent() {
+  const c = new Component({
+    icon: "copy",
+    description: "Copy a file",
+    // The 1.x source set a lowercase `forwardbrackets`, which the engine
+    // never read; the effective behavior was no bracket forwarding
+    forwardBrackets: {},
+    inPorts: {
+      source: { datatype: "string", required: true },
+      destination: { datatype: "string", required: true },
+    },
+    outPorts: {
+      out: { datatype: "string" },
+      error: { datatype: "object" },
+    },
   });
-  c.outPorts.add('error', {
-    datatype: 'object',
-    required: false,
-  });
 
-  c.forwardbrackets = {
-    source: ['out', 'error'],
-    destination: ['out', 'error'],
-  };
-
-  return c.process((input, output) => {
-    if (!input.hasData('source', 'destination')) { return; }
-    const [source, destination] = input.getData('source', 'destination');
+  c.process((input, output) => {
+    if (!input.hasData("source", "destination")) {
+      return;
+    }
+    const [source, destination] = input.getData("source", "destination");
     const rs = fs.createReadStream(source);
     const ws = fs.createWriteStream(destination);
-    rs.on('error', output.done);
-    ws.on('error', output.done);
+    rs.on("error", (err) => output.done(err));
+    ws.on("error", (err) => output.done(err));
 
     rs.pipe(ws);
-    rs.on('end', () => output.sendDone({ out: destination }));
+    rs.on("end", () => output.sendDone({ out: destination }));
   });
-};
+
+  return c;
+}

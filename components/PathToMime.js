@@ -1,30 +1,33 @@
-const noflo = require('noflo');
-const mimetype = require('mimetype');
-
-// @runtime noflo-nodejs
+import { Component } from "@noflo/noflo";
+import mimetype from "mimetype";
 
 // Extra MIME types config
-mimetype.set('.markdown', 'text/x-markdown');
-mimetype.set('.md', 'text/x-markdown');
-mimetype.set('.xml', 'text/xml');
+mimetype.set(".markdown", "text/x-markdown");
+mimetype.set(".md", "text/x-markdown");
+mimetype.set(".xml", "text/xml");
 
-exports.getComponent = function () {
-  const c = new noflo.Component();
-  c.icon = 'files-o';
-  c.description = 'Get MIME type based on file path';
-  c.inPorts.add('in', {
-    datatype: 'string',
-    description: 'File path',
+/** @returns {import("@noflo/noflo").Component} The configured component */
+export function getComponent() {
+  const c = new Component({
+    icon: "files-o",
+    description: "Get MIME type based on file path",
+    inPorts: {
+      in: {
+        datatype: "string",
+        description: "File path",
+        required: true,
+      },
+    },
+    outPorts: {
+      out: { datatype: "string", description: "MIME type" },
+    },
   });
-  c.outPorts.add('out', {
-    datatype: 'string',
-    description: 'MIME type',
-  });
-  c.outPorts.add('error',
-    { datatype: 'object' });
-  return c.process((input, output) => {
-    if (!input.hasData('in')) { return; }
-    const pathname = input.getData('in');
+
+  c.process((input, output) => {
+    if (!input.hasData("in")) {
+      return;
+    }
+    const pathname = input.getData("in");
     const mime = mimetype.lookup(pathname);
     if (!mime) {
       output.done(new Error(`No MIME type found for '${pathname}'`));
@@ -32,4 +35,6 @@ exports.getComponent = function () {
     }
     output.sendDone({ out: mime });
   });
-};
+
+  return c;
+}

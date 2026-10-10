@@ -1,39 +1,48 @@
-const fs = require('fs');
-const noflo = require('noflo');
+import fs from "node:fs";
 
-// @runtime noflo-nodejs
+import { Component } from "@noflo/noflo";
 
-exports.getComponent = function () {
-  const c = new noflo.Component();
-  c.icon = 'floppy-o';
-  c.description = 'Write a string into a file';
+/**
+ * Writes a string into a file. Fixes the 1.x bug where `undefined` was
+ * sent on `out` (the content string was dereferenced for `.filename`
+ * instead of using the file path).
+ * @returns {import("@noflo/noflo").Component} The configured component
+ */
+export function getComponent() {
+  const c = new Component({
+    icon: "floppy-o",
+    description: "Write a string into a file",
+    inPorts: {
+      in: {
+        datatype: "string",
+        description: "Contents to write",
+        required: true,
+      },
+      filename: {
+        datatype: "string",
+        description: "File path to write to",
+        required: true,
+      },
+    },
+    outPorts: {
+      out: { datatype: "string" },
+      error: { datatype: "object" },
+    },
+  });
 
-  c.inPorts.add('in', {
-    datatype: 'string',
-    description: 'Contents to write',
-  });
-  c.inPorts.add('filename', {
-    datatype: 'string',
-    description: 'File path to write to',
-  });
-  c.outPorts.add('out', {
-    datatype: 'string',
-    required: false,
-  });
-  c.outPorts.add('error', {
-    datatype: 'object',
-    required: false,
-  });
-
-  return c.process((input, output) => {
-    if (!input.hasData('in', 'filename')) { return; }
-    const [filename, data] = input.getData('filename', 'in');
-    fs.writeFile(filename, data, 'utf-8', (err) => {
+  c.process((input, output) => {
+    if (!input.hasData("in", "filename")) {
+      return;
+    }
+    const [filename, data] = input.getData("filename", "in");
+    fs.writeFile(filename, data, "utf-8", (err) => {
       if (err) {
         output.done(err);
         return;
       }
-      output.sendDone({ out: data.filename });
+      output.sendDone({ out: filename });
     });
   });
-};
+
+  return c;
+}

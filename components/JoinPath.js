@@ -1,37 +1,39 @@
-const path = require('path');
-const noflo = require('noflo');
+import path from "node:path";
 
-// @runtime noflo-nodejs
+import { Component } from "@noflo/noflo";
 
-exports.getComponent = function () {
-  const c = new noflo.Component();
-  c.description = 'Join a directory path with a file path';
-
-  c.inPorts.add('directory', {
-    datatype: 'string',
-    description: 'Directory path',
-    required: true,
+/** @returns {import("@noflo/noflo").Component} The configured component */
+export function getComponent() {
+  const c = new Component({
+    description: "Join a directory path with a file path",
+    // The 1.x source set a lowercase `forwardbrackets`, which the engine
+    // never read; with port names other than `in` the effective behavior
+    // was no bracket forwarding
+    forwardBrackets: {},
+    inPorts: {
+      directory: {
+        datatype: "string",
+        description: "Directory path",
+        required: true,
+      },
+      file: {
+        datatype: "string",
+        description: "File path",
+        required: true,
+      },
+    },
+    outPorts: {
+      out: { datatype: "string" },
+    },
   });
-  c.inPorts.add('file', {
-    datatype: 'string',
-    description: 'File path',
-    required: true,
-  });
-  c.outPorts.add('out',
-    { datatype: 'string' });
-  c.outPorts.add('error', {
-    datatype: 'object',
-    required: false,
-  });
 
-  c.forwardbrackets = {
-    directory: ['out', 'error'],
-    file: ['out', 'error'],
-  };
-
-  return c.process((input, output) => {
-    if (!input.hasData('directory', 'file')) { return; }
-    const [directory, file] = input.getData('directory', 'file');
+  c.process((input, output) => {
+    if (!input.hasData("directory", "file")) {
+      return;
+    }
+    const [directory, file] = input.getData("directory", "file");
     output.sendDone({ out: path.join(directory, file) });
   });
-};
+
+  return c;
+}

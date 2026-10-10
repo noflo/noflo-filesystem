@@ -1,14 +1,27 @@
-File system components for NoFlo
-=========================
+# @noflo/filesystem
 
-This module provides components for the [NoFlo](http://noflojs.org/) flow-based programming framework to deal with the file system.
+Filesystem Utilities for [NoFlo](http://noflojs.org/)
 
-## Changes
+This package provides components for working with the filesystem in
+NoFlo programs: reading and writing files, listing and copying
+directories, path manipulation, and MIME-type routing.
 
-* 2.2.0 (January 8 2021)
-  - Ported from CoffeeScript to ES6
-* 2.1.0 (September 21 2020)
-  - Ported all components from WirePattern to Process API
-  - Removed deprecated `ReadFileSync` component
-* 2.0.1 (December 12 2017)
-  - Added new PathToMime component for looking up MIME matching a file path
+## Usage
+
+Install the package:
+
+    npm install @noflo/filesystem
+
+The components are then available under the `filesystem/` namespace,
+for example `filesystem/ReadFile` or `filesystem/WriteFile`.
+
+Components include:
+
+- `ReadFile`, `WriteFile`, `ReadFileRaw`, `WriteFileRaw` — file content
+- `ReadDir`, `MakeDir`, `CopyFile`, `CopyTree`, `Unlink`, `Stat` —
+  directory and file operations
+- `BaseName`, `DirName`, `ExtName`, `JoinPath`, `Normalize`, `Resolve` —
+  path manipulation
+- `PathToMime`, `MimeRouter`, `MimeDocumentRouter` — MIME routing
+- `DirectoryBuffer`, `DirectoryGroupBuffer` — collect paths until a
+  directory is released

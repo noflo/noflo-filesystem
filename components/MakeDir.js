@@ -1,27 +1,36 @@
-const fs = require('fs');
-const path = require('path');
-const noflo = require('noflo');
+import fs from "node:fs";
+import path from "node:path";
 
-// @runtime noflo-nodejs
+import { Component } from "@noflo/noflo";
 
-exports.getComponent = function () {
-  const c = new noflo.Component();
-  c.icon = 'folder';
-  c.description = 'Create a directory';
-  c.inPorts.add('in', {
-    datatype: 'string',
-    description: 'Directory path to create',
-  });
-  c.outPorts.add('out', {
-    datatype: 'string',
-    required: false,
-  });
-  c.outPorts.add('error', {
-    datatype: 'object',
-    required: false,
+/**
+ * Creates a directory, creating missing parents as needed. Succeeds
+ * when the directory already exists.
+ * @returns {import("@noflo/noflo").Component} The configured component
+ */
+export function getComponent() {
+  const c = new Component({
+    icon: "folder",
+    description: "Create a directory",
+    inPorts: {
+      in: {
+        datatype: "string",
+        description: "Directory path to create",
+        required: true,
+      },
+    },
+    outPorts: {
+      out: { datatype: "string" },
+      error: { datatype: "object" },
+    },
   });
 
-  function mkdir(dir, callback) {
+  /**
+   * @param {string} dir
+   * @param {(err: Error | null) => void} callback
+   * @returns {void}
+   */
+  const mkdir = (dir, callback) => {
     const dirPath = path.resolve(dir);
 
     // Try creating it
@@ -32,7 +41,7 @@ exports.getComponent = function () {
         return;
       }
 
-      if (err.code === 'ENOENT') {
+      if (err.code === "ENOENT") {
         // Parent missing, create
         mkdir(path.dirname(dirPath), (internalError) => {
           if (internalError) {
@@ -56,10 +65,13 @@ exports.getComponent = function () {
         callback(null);
       });
     });
-  }
+  };
 
-  return c.process((input, output) => {
-    const dirPath = input.getData('in');
+  c.process((input, output) => {
+    if (!input.hasData("in")) {
+      return;
+    }
+    const dirPath = input.getData("in");
     mkdir(dirPath, (err) => {
       if (err) {
         output.done(err);
@@ -68,4 +80,6 @@ exports.getComponent = function () {
       output.sendDone({ out: dirPath });
     });
   });
-};
+
+  return c;
+}

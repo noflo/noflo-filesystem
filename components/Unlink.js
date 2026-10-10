@@ -1,27 +1,30 @@
-const fs = require('fs');
-const noflo = require('noflo');
+import fs from "node:fs";
 
-// @runtime noflo-nodejs
+import { Component } from "@noflo/noflo";
 
-exports.getComponent = function () {
-  const c = new noflo.Component();
-  c.icon = 'trash';
-  c.description = 'Remove a file';
-  c.inPorts.add('in', {
-    datatype: 'string',
-    description: 'File path to remove',
-  });
-  c.outPorts.add('out', {
-    datatype: 'string',
-    required: false,
-  });
-  c.outPorts.add('error', {
-    datatype: 'object',
-    required: false,
+/** @returns {import("@noflo/noflo").Component} The configured component */
+export function getComponent() {
+  const c = new Component({
+    icon: "trash",
+    description: "Remove a file",
+    inPorts: {
+      in: {
+        datatype: "string",
+        description: "File path to remove",
+        required: true,
+      },
+    },
+    outPorts: {
+      out: { datatype: "string" },
+      error: { datatype: "object" },
+    },
   });
 
-  return c.process((input, output) => {
-    const path = input.getData('in');
+  c.process((input, output) => {
+    if (!input.hasData("in")) {
+      return;
+    }
+    const path = input.getData("in");
     fs.unlink(path, (err) => {
       if (err) {
         output.done(err);
@@ -30,4 +33,6 @@ exports.getComponent = function () {
       output.sendDone({ out: path });
     });
   });
-};
+
+  return c;
+}

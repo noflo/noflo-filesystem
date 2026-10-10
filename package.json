@@ -1,32 +1,44 @@
 {
-  "name": "noflo-filesystem",
-  "description": "Filesystem components for the NoFlo flow-based programming environment",
+  "name": "@noflo/filesystem",
+  "description": "Filesystem Utilities for NoFlo",
+  "version": "2.0.0-alpha.1",
+  "keywords": [
+    "noflo",
+    "filesystem",
+    "file",
+    "utilities"
+  ],
   "author": "Henri Bergius <henri.bergius@iki.fi>",
-  "version": "2.2.0",
-  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/noflo/noflo-filesystem.git"
+    "url": "https://github.com/noflo/noflo-filesystem"
   },
-  "engines": {
-    "node": ">=6"
-  },
+  "license": "MIT",
   "dependencies": {
-    "fs.extra": "~1.3.2",
-    "mimetype": "~0.0.8",
-    "noflo": "^1.0.0"
+    "@noflo/noflo": "^2.0.0-alpha.2",
+    "mimetype": "~0.0.8"
   },
   "devDependencies": {
-    "eslint": "^7.17.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1",
-    "nodeunit": "^0.11.3"
-  },
-  "noflo": {
-    "icon": "file"
+    "@biomejs/biome": "^2.0.0",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.0.0"
   },
   "scripts": {
-    "pretest": "eslint components",
-    "test": "nodeunit test"
-  }
+    "lint": "npx @biomejs/biome check --use-editorconfig=true components/ test/",
+    "format": "npx @biomejs/biome check --use-editorconfig=true --write components/ test/",
+    "types": "tsc -p tsconfig.json",
+    "test": "npm run types && npm run lint && npm run test:node",
+    "test:node": "node --test test/*.test.js"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "components/",
+    "test/",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ]
 }

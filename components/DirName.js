@@ -1,21 +1,30 @@
-const path = require('path');
-const noflo = require('noflo');
+import path from "node:path";
 
-// @runtime noflo-nodejs
+import { Component } from "@noflo/noflo";
 
-exports.getComponent = function () {
-  const c = new noflo.Component();
-  c.icon = 'folder';
-  c.description = 'Get the directory path of a file path';
-
-  c.inPorts.add('in', {
-    datatype: 'string',
-    description: 'File path',
+/** @returns {import("@noflo/noflo").Component} The configured component */
+export function getComponent() {
+  const c = new Component({
+    icon: "folder",
+    description: "Get the directory path of a file path",
+    inPorts: {
+      in: {
+        datatype: "string",
+        description: "File path",
+        required: true,
+      },
+    },
+    outPorts: {
+      out: { datatype: "string" },
+    },
   });
-  c.outPorts.add('out',
-    { datatype: 'string' });
 
-  return c.process((input, output) => {
-    output.sendDone({ out: path.dirname(input.getData('in')) });
+  c.process((input, output) => {
+    if (!input.hasData("in")) {
+      return;
+    }
+    output.sendDone({ out: path.dirname(input.getData("in")) });
   });
-};
+
+  return c;
+}

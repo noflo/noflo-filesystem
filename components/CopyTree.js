@@ -1,40 +1,50 @@
-const fs = require('fs.extra');
-const noflo = require('noflo');
+import fs from "node:fs";
 
-// @runtime noflo-nodejs
+import { Component } from "@noflo/noflo";
 
-exports.getComponent = function () {
-  const c = new noflo.Component();
-  c.icon = 'copy';
-  c.description = 'Copy a directory tree';
-
-  c.inPorts.add('from', {
-    datatype: 'string',
-    description: 'Source path',
+/**
+ * Copies a directory tree recursively, using the Node.js built-in
+ * `fs.cp` instead of the unmaintained `fs.extra` package.
+ * @returns {import("@noflo/noflo").Component} The configured component
+ */
+export function getComponent() {
+  const c = new Component({
+    icon: "copy",
+    description: "Copy a directory tree",
+    // The 1.x source set a lowercase `forwardbrackets`, which the engine
+    // never read; the effective behavior was no bracket forwarding
+    forwardBrackets: {},
+    inPorts: {
+      from: {
+        datatype: "string",
+        description: "Source path",
+        required: true,
+      },
+      to: {
+        datatype: "string",
+        description: "Target path",
+        required: true,
+      },
+    },
+    outPorts: {
+      out: { datatype: "string" },
+      error: { datatype: "object" },
+    },
   });
-  c.inPorts.add('to', {
-    datatype: 'string',
-    description: 'Target path',
-  });
-  c.outPorts.add('out',
-    { datatype: 'string' });
-  c.outPorts.add('error',
-    { datatype: 'object' });
 
-  c.forwardbrackets = {
-    from: ['out', 'error'],
-    to: ['out', 'error'],
-  };
-
-  return c.process((input, output) => {
-    if (!input.hasData('from', 'to')) { return; }
-    const data = input.getData('from', 'to');
-    fs.copyRecursive(data[0], data[1], (err) => {
+  c.process((input, output) => {
+    if (!input.hasData("from", "to")) {
+      return;
+    }
+    const [from, to] = input.getData("from", "to");
+    fs.cp(from, to, { recursive: true }, (err) => {
       if (err) {
         output.done(err);
         return;
       }
-      output.sendDone({ out: data[1] });
+      output.sendDone({ out: to });
     });
   });
-};
+
+  return c;
+}

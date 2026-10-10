@@ -1,21 +1,31 @@
-const path = require('path');
-const noflo = require('noflo');
+import path from "node:path";
 
-// @runtime noflo-nodejs
+import { Component } from "@noflo/noflo";
 
-exports.getComponent = function () {
-  const c = new noflo.Component();
-  c.icon = 'font';
-  c.description = 'Resolve a relative path to an absolute one';
-  c.inPorts.add('in', {
-    datatype: 'string',
-    description: 'Path to resolve',
+/** @returns {import("@noflo/noflo").Component} The configured component */
+export function getComponent() {
+  const c = new Component({
+    icon: "font",
+    description: "Resolve a relative path to an absolute one",
+    inPorts: {
+      in: {
+        datatype: "string",
+        description: "Path to resolve",
+        required: true,
+      },
+    },
+    outPorts: {
+      out: { datatype: "string" },
+    },
   });
-  c.outPorts.add('out',
-    { datatype: 'string' });
-  return c.process((input, output) => {
-    if (!input.hasData('in')) { return; }
-    const data = input.getData('in');
+
+  c.process((input, output) => {
+    if (!input.hasData("in")) {
+      return;
+    }
+    const data = input.getData("in");
     output.sendDone({ out: path.resolve(data) });
   });
-};
+
+  return c;
+}
